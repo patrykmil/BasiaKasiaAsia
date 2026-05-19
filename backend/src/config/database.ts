@@ -11,9 +11,16 @@ import { seedDatabase } from '../seed/seedData';
 // Database configuration
 export const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: path.resolve(__dirname, '../../db/database.db'),
+  storage: process.env.DB_PATH
+    ? path.resolve(process.cwd(), process.env.DB_PATH)
+    : path.resolve(__dirname, '../../db/database.db'),
   models: [Role, User, Forum, Thread, Comment],
-  logging: process.env.NODE_ENV === 'development' ? logger.log : false,
+  logging: process.env.NODE_ENV === 'development' ? (msg) => logger.debug(msg) : false,
+  pool: {
+    max: 5,
+    min: 0,
+    idle: 10000,
+  },
   define: {
     timestamps: true,
     underscored: true,
