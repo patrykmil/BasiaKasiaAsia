@@ -116,6 +116,23 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
       res.status(400).json({ error: 'Username, email, and password are required' });
       return;
     }
+
+    if (typeof username !== 'string' || username.trim().length < 3) {
+      res.status(400).json({ error: 'Username must have at least 3 characters' });
+      return;
+    }
+
+    const normalizedEmail = String(email).trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(normalizedEmail)) {
+      res.status(400).json({ error: 'Invalid email format' });
+      return;
+    }
+
+    if (typeof password !== 'string' || password.length < 8) {
+      res.status(400).json({ error: 'Password must have at least 8 characters' });
+      return;
+    }
     
     // Hash password
     const saltRounds = 12;
@@ -123,20 +140,12 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     
     // Create user
     const newUser = await userService.createUser({
-      username,
-      email,
+      username: username.trim(),
+      email: normalizedEmail,
       password_hash,
       date_of_birth,
       gender,
       role_id,
-    });
-    
-    // Generate JWT token
-    const token = generateToken({
-      userId: newUser.user_id,
-      username: newUser.username,
-      email: newUser.email,
-      roleId: newUser.role_id,
     });
     
     res.status(201).json({
@@ -235,9 +244,11 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       res.status(400).json({ error: 'Email and password are required' });
       return;
     }
+
+    const normalizedEmail = String(email).trim().toLowerCase();
     
     // Get user with password hash
-    const user = await userService.getUserByEmail(email, true);
+    const user = await userService.getUserByEmail(normalizedEmail, true);
     
     if (!user) {
       res.status(401).json({ error: 'Invalid credentials' });
