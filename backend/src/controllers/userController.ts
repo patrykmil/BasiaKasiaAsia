@@ -177,7 +177,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     }
     
     // Check if user can update this profile (either own profile or admin)
-    if (req.user && req.user.userId !== userId && req.user.roleId !== 1) {
+    if (req.user && req.user.userId !== userId && req.user.roleId !== 3) {
       res.status(403).json({ error: 'Cannot update another user\'s profile' });
       return;
     }
@@ -214,7 +214,7 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
     }
     
     // Check if user can delete this profile (either own profile or admin)
-    if (req.user && req.user.userId !== userId && req.user.roleId !== 1) {
+    if (req.user && req.user.userId !== userId && req.user.roleId !== 3) {
       res.status(403).json({ error: 'Cannot delete another user\'s profile' });
       return;
     }

@@ -238,7 +238,7 @@ export const updateComment = async (req: Request, res: Response): Promise<void> 
     }
 
     // Check if user owns the comment or is admin
-    if (currentComment.user_id !== req.user.userId && req.user.roleId !== 1) {
+    if (currentComment.user_id !== req.user.userId && req.user.roleId !== 3) {
       res.status(403).json({ error: 'Cannot update another user\'s comment' });
       return;
     }
@@ -285,7 +285,7 @@ export const deleteComment = async (req: Request, res: Response): Promise<void> 
     }
 
     // Check if user owns the comment or is admin
-    if (currentComment.user_id !== req.user.userId && req.user.roleId !== 1) {
+    if (currentComment.user_id !== req.user.userId && req.user.roleId !== 3) {
       res.status(403).json({ error: 'Cannot delete another user\'s comment' });
       return;
     }
