@@ -15,7 +15,6 @@ instance.interceptors.request.use(
     if (type && token) {
       config.headers["Authorization"] = `${JSON.parse(type)} ${JSON.parse(token)}`;
     }
-    console.log(config)
     return config;
   },
   (error) => {

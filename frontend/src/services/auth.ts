@@ -34,7 +34,6 @@ export async function register(email: string, password: string, username: string
 
 export async function logout() {
   const token = sessionStorage.getItem("refreshToken");
-  console.log("Logging out with token:", token);
   const response = await axios.post(
     "http://localhost:8000/api/auth/logout",
     {

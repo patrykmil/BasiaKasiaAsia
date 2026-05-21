@@ -27,8 +27,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode}) => {
 
   const login = async (email: string, master_hash: string) => {
     try {
-      console.log("Logging in with email:", email);
-      console.log("Using master hash:", master_hash);
       const data = await apiLogin(email, master_hash);
       setRole(data.role);
       setAccessTokenType(data.access_token_type);
@@ -37,7 +35,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode}) => {
       setExpiresIn(data.access_token_expires_in);
       setRefreshTokenExpiresIn(data.refresh_token_expires_in);
       setIsAuthenticated(true)
-      console.log("Login successful, received data:", role);
       if (data.role === "admin") {
         navigate("/admin");
         return;
