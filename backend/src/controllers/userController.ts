@@ -169,7 +169,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = parseInt(req.params.id);
-    const { nickname, email, bio, role_id } = req.body;
+    const { username, email, bio, role_id } = req.body;
     
     if (isNaN(userId)) {
       res.status(400).json({ error: 'Invalid user ID' });
@@ -183,7 +183,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     }
     
     const updatedUser = await userService.updateUser(userId, {
-      nickname,
+      username,
       email,
       bio,
       role_id,

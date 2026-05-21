@@ -128,7 +128,7 @@ export const getUserByNickname = async (
 ): Promise<UserResponse | null> => {
   try {
     const user = await User.findOne({
-      where: { nickname },
+      where: { username: nickname },
       include: includeRole ? [{ model: Role, as: 'role' }] : [],
       attributes: { exclude: ['password_hash'] },
     });
@@ -256,7 +256,7 @@ export const createUser = async (userData: {
 export const updateUser = async (
   userId: number,
   updateData: {
-    nickname?: string;
+    username?: string;
     email?: string;
     bio?: string;
     role_id?: number;
