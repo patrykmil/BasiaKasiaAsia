@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSessionStorage } from "./useSessionStorage";
 import { login as apiLogin, logout as apiLogout } from "../services/auth";
@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode}) => {
   const [refresh_token_expires_in, setRefreshTokenExpiresIn] = useSessionStorage("refresh_token_expires_in", null);
   const [role, setRole] = useSessionStorage("role", null);
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(Boolean(accessToken))
 
   const login = async (email: string, master_hash: string) => {
     try {
@@ -56,6 +56,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode}) => {
     sessionStorage.clear();
     navigate("/login", { replace: true });
   };
+
+  useEffect(() => {
+    setIsAuthenticated(Boolean(accessToken));
+  }, [accessToken]);
 
   const value = useMemo(
     () => ({
