@@ -57,7 +57,6 @@ const initialValue = {
 
   const handleUpdateSignature = () => {
     // In a real app, you’d send this to your backend (e.g., via API)
-    console.log("Updated signature:", "JEBAC DISA KURWE JEBANA GIERCZAKA");
     alert("Signature updated successfully!");
   };
 
