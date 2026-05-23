@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany, Index } from 'sequelize-typescript';
 import { Thread } from './Thread';
 import { User } from './User';
 
@@ -12,14 +12,17 @@ export class Comment extends Model {
   @Column(DataType.INTEGER)
   declare comment_id: number;
 
+  @Index
   @ForeignKey(() => Thread)
   @Column(DataType.INTEGER)
   declare thread_id?: number;
 
+  @Index
   @ForeignKey(() => User)
   @Column(DataType.INTEGER)
   declare user_id?: number;
 
+  @Index
   @ForeignKey(() => Comment)
   @Column(DataType.INTEGER)
   declare parent_comment_id?: number;
