@@ -116,6 +116,23 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
       res.status(400).json({ error: 'Username, email, and password are required' });
       return;
     }
+
+    if (typeof username !== 'string' || username.trim().length < 3) {
+      res.status(400).json({ error: 'Username must have at least 3 characters' });
+      return;
+    }
+
+    const normalizedEmail = String(email).trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(normalizedEmail)) {
+      res.status(400).json({ error: 'Invalid email format' });
+      return;
+    }
+
+    if (typeof password !== 'string' || password.length < 8) {
+      res.status(400).json({ error: 'Password must have at least 8 characters' });
+      return;
+    }
     
     // Hash password
     const saltRounds = 12;
@@ -123,20 +140,12 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     
     // Create user
     const newUser = await userService.createUser({
-      username,
-      email,
+      username: username.trim(),
+      email: normalizedEmail,
       password_hash,
       date_of_birth,
       gender,
       role_id,
-    });
-    
-    // Generate JWT token
-    const token = generateToken({
-      userId: newUser.user_id,
-      username: newUser.username,
-      email: newUser.email,
-      roleId: newUser.role_id,
     });
     
     res.status(201).json({
@@ -160,7 +169,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = parseInt(req.params.id);
-    const { nickname, email, bio, role_id } = req.body;
+    const { username, email, bio, role_id } = req.body;
     
     if (isNaN(userId)) {
       res.status(400).json({ error: 'Invalid user ID' });
@@ -168,13 +177,13 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     }
     
     // Check if user can update this profile (either own profile or admin)
-    if (req.user && req.user.userId !== userId && req.user.roleId !== 1) {
+    if (req.user && req.user.userId !== userId && req.user.roleId !== 3) {
       res.status(403).json({ error: 'Cannot update another user\'s profile' });
       return;
     }
     
     const updatedUser = await userService.updateUser(userId, {
-      nickname,
+      username,
       email,
       bio,
       role_id,
@@ -205,7 +214,7 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
     }
     
     // Check if user can delete this profile (either own profile or admin)
-    if (req.user && req.user.userId !== userId && req.user.roleId !== 1) {
+    if (req.user && req.user.userId !== userId && req.user.roleId !== 3) {
       res.status(403).json({ error: 'Cannot delete another user\'s profile' });
       return;
     }
@@ -235,9 +244,11 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       res.status(400).json({ error: 'Email and password are required' });
       return;
     }
+
+    const normalizedEmail = String(email).trim().toLowerCase();
     
     // Get user with password hash
-    const user = await userService.getUserByEmail(email, true);
+    const user = await userService.getUserByEmail(normalizedEmail, true);
     
     if (!user) {
       res.status(401).json({ error: 'Invalid credentials' });

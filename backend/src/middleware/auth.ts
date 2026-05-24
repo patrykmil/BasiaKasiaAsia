@@ -72,7 +72,7 @@ export const requireRole = (requiredRoleId: number) => {
 };
 
 /**
- * Middleware to check if user is admin (assuming role_id 1 is admin)
+ * Middleware to check if user is admin (role_id 3)
  */
 export const requireAdmin = requireRole(3);
 

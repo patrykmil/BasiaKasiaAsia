@@ -191,8 +191,8 @@ export const updateForum = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    // Check if user is admin (role_id = 1)
-    if (req.user.roleId !== 1) {
+    // Check if user is admin (role_id = 3)
+    if (req.user.roleId !== 3) {
       res.status(403).json({ error: 'Only administrators can update forums' });
       return;
     }
@@ -240,8 +240,8 @@ export const deleteForum = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    // Check if user is admin (role_id = 1)
-    if (req.user.roleId !== 1) {
+    // Check if user is admin (role_id = 3)
+    if (req.user.roleId !== 3) {
       res.status(403).json({ error: 'Only administrators can delete forums' });
       return;
     }

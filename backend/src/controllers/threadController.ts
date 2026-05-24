@@ -241,7 +241,7 @@ export const updateThread = async (req: Request, res: Response): Promise<void> =
     }
 
     // Check if user owns the thread or is admin
-    if (currentThread.user_id !== req.user.userId && req.user.roleId !== 1) {
+    if (currentThread.user_id !== req.user.userId && req.user.roleId !== 3) {
       res.status(403).json({ error: 'Cannot update another user\'s thread' });
       return;
     }
@@ -291,7 +291,7 @@ export const deleteThread = async (req: Request, res: Response): Promise<void> =
     }
 
     // Check if user owns the thread or is admin
-    if (currentThread.user_id !== req.user.userId && req.user.roleId !== 1) {
+    if (currentThread.user_id !== req.user.userId && req.user.roleId !== 3) {
       res.status(403).json({ error: 'Cannot delete another user\'s thread' });
       return;
     }
