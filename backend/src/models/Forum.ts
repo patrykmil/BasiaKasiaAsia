@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany, Index } from 'sequelize-typescript';
 import { Thread } from './Thread';
 import { User } from './User';
 
@@ -24,6 +24,7 @@ export class Forum extends Model {
   })
   declare description?: string;
 
+  @Index
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,

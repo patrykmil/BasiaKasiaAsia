@@ -12,8 +12,8 @@ export const seedDatabase = async (): Promise<void> => {
 
     // Create roles first
     const userRole = await Role.create({ name: 'user' });
-    const moderatorRole = await Role.create({ name: 'moderator' });
-    const adminRole = await Role.create({ name: 'admin' });
+    await Role.create({ name: 'moderator' });
+    await Role.create({ name: 'admin' });
 
     // Create users
     const users = [
@@ -37,7 +37,7 @@ export const seedDatabase = async (): Promise<void> => {
         email: userData.email,
         password_hash: hashedPassword,
         date_of_birth: new Date(new Date().getFullYear() - userData.age, 0, 1),
-        role_id: userRole.id,
+        role_id: userRole.role_id,
       });
       createdUsers.push(user);
     }

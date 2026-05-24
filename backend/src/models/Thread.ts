@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany, Index } from 'sequelize-typescript';
 import { Forum } from './Forum';
 import { User } from './User';
 import { Comment } from './Comment';
@@ -25,10 +25,18 @@ export class Thread extends Model {
   })
   declare description?: string;
 
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare deleted_at?: Date | null;
+
+  @Index
   @ForeignKey(() => Forum)
   @Column(DataType.INTEGER)
   declare forum_id?: number;
 
+  @Index
   @ForeignKey(() => User)
   @Column(DataType.INTEGER)
   declare user_id?: number;
