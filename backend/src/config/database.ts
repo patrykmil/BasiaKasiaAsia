@@ -34,6 +34,7 @@ export const connectDatabase = async (): Promise<void> => {
   try {
     await sequelize.authenticate();
     logger.info(`Database connection established successfully.`);
+    logger.info(`Database file: ${sequelize.getDatabaseName()}`);
     
     // Sync models with database - alter will update schema without dropping data
     await sequelize.sync({ alter: true });
