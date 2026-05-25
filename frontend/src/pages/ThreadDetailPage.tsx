@@ -29,7 +29,6 @@ function ThreadDetailPage() {
     const handleFetchThread = useCallback(async () => {
         try{
             const fetchedThread = await getThreadById(Number(threadId));
-            console.log("Fetched thread:", fetchedThread);
             setThread(fetchedThread);
         } catch (error) {
             toast.error(`Error fetching thread: ${error}`);
@@ -39,7 +38,6 @@ function ThreadDetailPage() {
     const handleFetchComments = useCallback(async () => {
         try {
             const fetchedComments = await getCommentsByThreadId(Number(threadId));
-            console.log("Fetched comments:", fetchedComments);
             setComments(Array.isArray(fetchedComments) ? fetchedComments : []);
         } catch (error) {
             toast.error(`Error fetching comments: ${error}`);

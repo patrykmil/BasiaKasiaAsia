@@ -20,12 +20,12 @@ function LoginPage() {
     const handleLogin = async () => {
         const id = toast.loading("Logging in...");
         try{
-            if (emailLogin === "" && passwordLogin === "") {
+            if (!emailLogin.trim() || !passwordLogin.trim()) {
                 toast.warning("Email and password are required", {id});
                 return;
             }
 
-            await auth.login(emailLogin, passwordLogin);
+            await auth.login(emailLogin.trim(), passwordLogin);
             toast.success("Login successful!", {id, duration: 2000});
         } catch (error) {
             toast.error(`Login error: ${error}`, {id});
@@ -35,8 +35,13 @@ function LoginPage() {
     const handleRegister = async (data: { name: string; email: string; password: string; repeatPassword: string; gender: string; date: Date | undefined }) => {
         const id = toast.loading("Registering...");
         try {
-            if (!data.email || !data.password) {
-                toast.warning("Email and password are required", { id });
+            if (!data.name.trim() || !data.email.trim() || !data.password) {
+                toast.warning("Name, email and password are required", { id });
+                return;
+            }
+
+            if (data.password.length < 8) {
+                toast.warning("Password must be at least 8 characters", { id });
                 return;
             }
 
@@ -45,7 +50,7 @@ function LoginPage() {
                 return;
             }
 
-            await register(data.email, data.password, data.name, data.date, data.gender);
+            await register(data.email.trim(), data.password, data.name.trim(), data.date, data.gender);
             
             // Success - switch to sign in tab
             toast.success("Registration successful! Please sign in.", { id, duration: 1000 });

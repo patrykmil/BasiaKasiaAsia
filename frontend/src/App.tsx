@@ -12,7 +12,7 @@ import AdminPanelPage from './pages/AdminPanelPage'
 const ProtectedRoute = () => {
   const auth = useAuth()
 
-  if (auth.accessToken === null) {
+  if (!auth.isAuthenticated) {
     return <Navigate to="/login" />
   }
 
