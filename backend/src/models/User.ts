@@ -60,7 +60,7 @@ export class User extends Model {
 
   @ForeignKey(() => Role)
   @Column(DataType.INTEGER)
-  declare role_id?: number;
+  declare role_id?: number | null;
 
   // Associations
   @BelongsTo(() => Role)

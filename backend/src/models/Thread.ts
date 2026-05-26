@@ -34,12 +34,12 @@ export class Thread extends Model {
   @Index
   @ForeignKey(() => Forum)
   @Column(DataType.INTEGER)
-  declare forum_id?: number;
+  declare forum_id?: number | null;
 
   @Index
   @ForeignKey(() => User)
   @Column(DataType.INTEGER)
-  declare user_id?: number;
+  declare user_id?: number | null;
 
   // Associations
   @BelongsTo(() => Forum)
