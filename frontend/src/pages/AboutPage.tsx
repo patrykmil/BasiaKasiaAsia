@@ -56,7 +56,7 @@ function AboutPage() {
                 </div>
 
                 <div className="w-full max-w-fit">
-                    <p className="text-2xl font-semibold mb-4">Our Founders</p>
+                    <p className="text-2xl font-semibold mb-4">Our founders</p>
                     <div className="flex gap-6 flex-wrap">
                         <Cards 
                             imageSrc="/src/assets/img/Basia.jpg"

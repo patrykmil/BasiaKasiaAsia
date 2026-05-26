@@ -21,7 +21,7 @@ function Menu() {
             <NavigationMenuList>
                 <NavigationMenuItem>
                     <NavigationMenuLink asChild className="text-xl">
-                        <Link to="/" >Main Page</Link>
+                        <Link to="/" >Main page</Link>
                     </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
@@ -45,13 +45,13 @@ function Menu() {
                 )}
                 <NavigationMenuItem>
                     <NavigationMenuLink asChild className="text-xl">
-                        <Link to="/about">About Us</Link>
+                        <Link to="/about">About us</Link>
                     </NavigationMenuLink>
                 </NavigationMenuItem>
                 {auth.isAuthenticated && (
                     <NavigationMenuItem>
                         <NavigationMenuLink asChild className="text-xl">
-                            <span onClick={() => auth.logout()}>Logout</span>
+                            <button type="button" onClick={() => auth.logout()} className="cursor-pointer">Logout</button>
                         </NavigationMenuLink>
                     </NavigationMenuItem>
                 )}
