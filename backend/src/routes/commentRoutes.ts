@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as commentController from '../controllers/commentController';
-import { authenticateJWT, optionalAuthentication } from '../middleware/auth';
+import { authenticateJWT } from '../middleware/auth';
 
 const router = Router();
 
