@@ -15,17 +15,17 @@ export class Comment extends Model {
   @Index
   @ForeignKey(() => Thread)
   @Column(DataType.INTEGER)
-  declare thread_id?: number;
+  declare thread_id?: number | null;
 
   @Index
   @ForeignKey(() => User)
   @Column(DataType.INTEGER)
-  declare user_id?: number;
+  declare user_id?: number | null;
 
   @Index
   @ForeignKey(() => Comment)
   @Column(DataType.INTEGER)
-  declare parent_comment_id?: number;
+  declare parent_comment_id?: number | null;
 
   @Column({
     type: DataType.TEXT,
