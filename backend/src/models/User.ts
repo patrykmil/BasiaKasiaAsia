@@ -46,6 +46,12 @@ export class User extends Model {
   declare gender?: string;
 
   @Column({
+    type: DataType.DATE,
+    allowNull: true,
+  })
+  declare deleted_at?: Date | null;
+
+  @Column({
     type: DataType.TEXT,
     allowNull: true,
   })
