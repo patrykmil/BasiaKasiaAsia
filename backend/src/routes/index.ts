@@ -20,7 +20,8 @@ router.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
-    message: 'BKA Forum API is running' 
+    message: 'BKA Forum API is running',
+    version: 'v1',
   });
 });
 
