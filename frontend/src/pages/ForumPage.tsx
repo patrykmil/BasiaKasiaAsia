@@ -37,6 +37,10 @@ function ForumPage() {
             // Trigger refresh of forums list
             setRefreshKey(prev => prev + 1);
         } catch (error) {
+            if (error instanceof Error) {
+                toast.error(error.message);
+                return;
+            }
             toast.error("Failed to create forum");
         }
     };
