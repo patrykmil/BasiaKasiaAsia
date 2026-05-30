@@ -40,6 +40,17 @@ function LoginPage() {
                 return;
             }
 
+            if (data.name.trim().length < 3) {
+                toast.warning("Username must have at least 3 characters", { id });
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(data.email.trim())) {
+                toast.warning("Invalid email format", { id });
+                return;
+            }
+
             if (data.password.length < 8) {
                 toast.warning("Password must be at least 8 characters", { id });
                 return;
