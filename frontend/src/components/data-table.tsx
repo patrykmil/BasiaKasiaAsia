@@ -62,8 +62,24 @@ export function DataTable<TData, TValue>({
     date: Date | undefined;
   }) => {
     try {
-    if (!data.email || !data.password) {
-      toast.warning("Email and password are required");
+    if (!data.name || !data.email || !data.password) {
+      toast.warning("Name, email and password are required");
+      return;
+    }
+
+    if (data.name.trim().length < 3) {
+      toast.warning("Username must have at least 3 characters");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email.trim())) {
+      toast.warning("Invalid email format");
+      return;
+    }
+
+    if (data.password.length < 8) {
+      toast.warning("Password must be at least 8 characters");
       return;
     }
 
