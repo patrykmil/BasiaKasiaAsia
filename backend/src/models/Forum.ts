@@ -29,19 +29,10 @@ export class Forum extends Model {
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    field: 'created_by'
   })
   declare created_by: number;
 
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-    defaultValue: DataType.NOW,
-    field: 'created_at'
-  })
-  declare created_at: Date;
-
-  @BelongsTo(() => User, 'created_by')
+  @BelongsTo(() => User)
   declare creator: User;
 
   @HasMany(() => Thread)
