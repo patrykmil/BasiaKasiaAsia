@@ -1,0 +1,9 @@
+jwt_secret             = ""
+default_admin_password = ""
+
+# Optional overrides:
+# location            = "westeurope"
+# resource_group_name = "rg-bka"
+# app_name            = "basiakasiaasia"
+# service_plan_sku    = "B1"
+# jwt_expires_in      = "24h"
