@@ -22,6 +22,8 @@ import { Input } from "@/components/ui/input";
 import { Editor } from "@/components/blocks/editor-00/editor";
 import { useState } from "react";
 
+import AsiaImg from '../assets/img/Asia.jpg';
+
 const dummyNickname = "Asia";
 const dummyDate = "28-11-2001";
 
@@ -56,7 +58,6 @@ const initialValue = {
 } as unknown as SerializedEditorState
 
   const handleUpdateSignature = () => {
-    // In a real app, you’d send this to your backend (e.g., via API)
     alert("Signature updated successfully!");
   };
 
@@ -83,7 +84,7 @@ function ProfilePage() {
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-3">
               <img
-                src="/src/assets/img/Asia.jpg"
+                src={AsiaImg}
                 alt="Profile Picture"
                 className="rounded-3xl w-56 h-56 md:w-80 md:h-80 object-cover"
               />

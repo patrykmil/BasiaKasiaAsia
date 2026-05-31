@@ -1,6 +1,9 @@
 import  Menu  from '@/components/Menu'
 import Cards from '@/components/Card';
 import Footer from '@/components/Foooter';
+import BasiaImg from '../assets/img/Basia.jpg';
+import KasiaImg from '../assets/img/Kasia.jpg';
+import AsiaImg from '../assets/img/Asia.jpg';
 
 function HomePage() {
     return (
@@ -13,17 +16,17 @@ function HomePage() {
                     <p className="text-2xl font-semibold mb-4">Our Founders</p>
                     <div className="flex gap-6 flex-wrap">
                         <Cards 
-                            imageSrc="/src/assets/img/Basia.jpg"
+                            imageSrc={BasiaImg}
                             title="Basia"
                             description="Co-founder and main visionary of the platform. Responsible for development strategy and building the community."
                         />
                         <Cards 
-                            imageSrc="/src/assets/img/Kasia.jpg"
+                            imageSrc={KasiaImg}
                             title="Kasia"
                             description="Technology and product development expert. Ensures the platform runs smoothly and efficiently."
                         />
                         <Cards 
-                            imageSrc="/src/assets/img/Asia.jpg"
+                            imageSrc={AsiaImg}
                             title="Asia"
                             description="Communication and marketing specialist. Creates bridges between the community and the platform."
                         />
