@@ -6,9 +6,12 @@ Forum project with Node.js + Express backend, React frontend, and SQLite databas
 
 - Azure Terraform and deploy scripts are in `azure/`
 - This setup hosts both frontend and backend in Azure App Service
-- Backend SQLite database is stored at `/home/data/database.db` on App Service persistent storage
 
-See deployment steps in `azure/README.md`.
+Deployment steps:
+1. Install Azure CLI and Terraform
+2. Configure Azure credentials
+3. Update `azure/terraform.tfvars.example` to `azure/terraform.tfvars` with your Azure subscription details
+4. Run `terraform init`, `terraform apply --auto-approve` and `./azure/update-app.sh` to deploy the app
 
 ## Local setup
 
