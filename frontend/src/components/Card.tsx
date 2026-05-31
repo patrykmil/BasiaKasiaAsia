@@ -1,9 +1,7 @@
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -14,7 +12,7 @@ interface CardProps {
   description: string;
 }
 
-function Cards({ imageSrc, title, description, footerText }: CardProps) {
+function Cards({ imageSrc, title, description }: CardProps) {
     return (
         <Card className="w-80">
             <CardHeader>

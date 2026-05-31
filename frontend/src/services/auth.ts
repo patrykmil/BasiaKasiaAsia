@@ -1,8 +1,10 @@
 import axios from "axios";
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+
 export async function login(email: string, password: string) {
   try {
-    const response = await axios.post("http://localhost:8000/api/auth/login", {
+    const response = await axios.post(`${apiBaseUrl}/api/auth/login`, {
       "email": email,
       "password": password,
     });
@@ -22,7 +24,7 @@ export async function login(email: string, password: string) {
 
 export async function register(email: string, password: string, username: string, date_of_birth: Date | undefined, gender: string, role_id: number = 1) {
   try {
-    const response = await axios.post("http://localhost:8000/api/auth/register", {
+    const response = await axios.post(`${apiBaseUrl}/api/auth/register`, {
       "username": username,
       "email": email,
       "password": password,
@@ -42,7 +44,7 @@ export async function register(email: string, password: string, username: string
 export async function logout() {
   const token = sessionStorage.getItem("refreshToken");
   const response = await axios.post(
-    "http://localhost:8000/api/auth/logout",
+    `${apiBaseUrl}/api/auth/logout`,
     {
       "token": JSON.parse(token || "null"),
     }
