@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ListItemNode, ListNode } from "@lexical/list"
-import type { InitialConfigType } from "@lexical/react/LexicalComposer"
-import { LexicalComposer } from "@lexical/react/LexicalComposer"
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary"
+import { useState } from "react";
+import { ListItemNode, ListNode } from "@lexical/list";
+import type { InitialConfigType } from "@lexical/react/LexicalComposer";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 // ListPlugin is intentionally not imported to avoid runtime errors when list nodes are not registered.
 // import { ListPlugin } from "@lexical/react/LexicalListPlugin"
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
-import { HeadingNode, QuoteNode } from "@lexical/rich-text"
-import { ParagraphNode, TextNode } from "lexical"
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { ParagraphNode, TextNode } from "lexical";
 
-import { ContentEditable } from "@/components/editor/editor-ui/content-editable"
-import Toolbar from "@/components/editor/plugins/toolbar/toolbar"
-import { ToolbarPlugin } from "@/components/editor/plugins/toolbar/toolbar-plugin"
-import { editorTheme } from "@/components/editor/themes/editor-theme"
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { ContentEditable } from "@/components/editor/editor-ui/content-editable";
+import Toolbar from "@/components/editor/plugins/toolbar/toolbar";
+import { ToolbarPlugin } from "@/components/editor/plugins/toolbar/toolbar-plugin";
+import { editorTheme } from "@/components/editor/themes/editor-theme";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const editorConfig: InitialConfigType = {
   namespace: "Editor",
@@ -29,9 +29,9 @@ const editorConfig: InitialConfigType = {
     ListItemNode,
   ],
   onError: (error: Error) => {
-    console.error(error)
+    console.error(error);
   },
-}
+};
 
 export function RichTextEditorDemo() {
   return (
@@ -46,20 +46,20 @@ export function RichTextEditorDemo() {
         </TooltipProvider>
       </LexicalComposer>
     </div>
-  )
+  );
 }
 
-const placeholder = "Start typing..."
+const placeholder = "Start typing...";
 
 export function Plugins() {
   const [_floatingAnchorElem, setFloatingAnchorElem] =
-    useState<HTMLDivElement | null>(null)
+    useState<HTMLDivElement | null>(null);
 
   const onRef = (elem: HTMLDivElement) => {
     if (elem !== null) {
-      setFloatingAnchorElem(elem)
+      setFloatingAnchorElem(elem);
     }
-  }
+  };
 
   return (
     <div className="relative">
@@ -70,7 +70,6 @@ export function Plugins() {
             <Toolbar />
           </div>
         )}
-        
       </ToolbarPlugin>
 
       <div className="relative">
@@ -87,11 +86,11 @@ export function Plugins() {
           }
           ErrorBoundary={LexicalErrorBoundary}
         />
-    {/* List and checklist plugins removed to avoid runtime errors when list nodes are not registered.
+        {/* List and checklist plugins removed to avoid runtime errors when list nodes are not registered.
       If you want list support, register ListNode and ListItemNode (and any checklist nodes) in the editor's nodes array. */}
         {/* rest of the plugins */}
       </div>
     </div>
-  )
+  );
 }
-export default RichTextEditorDemo
+export default RichTextEditorDemo;

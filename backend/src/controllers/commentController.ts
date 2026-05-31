@@ -2,11 +2,13 @@ import { Request, Response } from 'express';
 import * as commentService from '../services/comment';
 import logger from '../config/logger';
 
-
 /**
  * Get comments for a thread
  */
-export const getCommentsByThreadId = async (req: Request, res: Response): Promise<void> => {
+export const getCommentsByThreadId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const threadId = parseInt(req.params.threadId);
     const limit = parseInt(req.query.limit as string) || 20;
@@ -29,13 +31,26 @@ export const getCommentsByThreadId = async (req: Request, res: Response): Promis
       return;
     }
 
-    const comments = await commentService.getCommentsByThreadId(threadId, limit, offset, includeReplies);
+    const comments = await commentService.getCommentsByThreadId(
+      threadId,
+      limit,
+      offset,
+      includeReplies
+    );
 
     // Transform comments to simplified format
-    const formattedComments = comments.map(comment => ({
+    const formattedComments = comments.map((comment) => ({
       id: comment.comment_id,
       username: comment.user?.username || 'Unknown',
-      date: comment.created_at ? new Date(comment.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.') : '',
+      date: comment.created_at
+        ? new Date(comment.created_at)
+            .toLocaleDateString('en-GB', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+            })
+            .replace(/\//g, '.')
+        : '',
       avatar: '/src/assets/img/default-user.svg',
       content: comment.content,
     }));
@@ -77,7 +92,10 @@ export const getCommentById = async (req: Request, res: Response): Promise<void>
 /**
  * Get replies for a specific comment
  */
-export const getRepliesForComment = async (req: Request, res: Response): Promise<void> => {
+export const getRepliesForComment = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const commentId = parseInt(req.params.commentId);
     const maxDepth = parseInt(req.query.max_depth as string) || 3;
@@ -109,7 +127,10 @@ export const getRepliesForComment = async (req: Request, res: Response): Promise
 /**
  * Get comments by user ID
  */
-export const getCommentsByUserId = async (req: Request, res: Response): Promise<void> => {
+export const getCommentsByUserId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const userId = parseInt(req.params.userId);
     const limit = parseInt(req.query.limit as string) || 20;
@@ -184,14 +205,16 @@ export const createComment = async (req: Request, res: Response): Promise<void> 
         res.status(400).json({ error: 'Invalid thread ID or parent comment ID' });
         return;
       }
-      
+
       if (error.message.includes('Parent comment not found')) {
         res.status(400).json({ error: 'Parent comment not found' });
         return;
       }
-      
+
       if (error.message.includes('Parent comment must belong to the same thread')) {
-        res.status(400).json({ error: 'Parent comment must belong to the same thread' });
+        res
+          .status(400)
+          .json({ error: 'Parent comment must belong to the same thread' });
         return;
       }
     }
@@ -239,7 +262,7 @@ export const updateComment = async (req: Request, res: Response): Promise<void> 
 
     // Check if user owns the comment or is admin
     if (currentComment.user_id !== req.user.userId && req.user.roleId !== 3) {
-      res.status(403).json({ error: 'Cannot update another user\'s comment' });
+      res.status(403).json({ error: "Cannot update another user's comment" });
       return;
     }
 
@@ -286,7 +309,7 @@ export const deleteComment = async (req: Request, res: Response): Promise<void> 
 
     // Check if user owns the comment or is admin
     if (currentComment.user_id !== req.user.userId && req.user.roleId !== 3) {
-      res.status(403).json({ error: 'Cannot delete another user\'s comment' });
+      res.status(403).json({ error: "Cannot delete another user's comment" });
       return;
     }
 

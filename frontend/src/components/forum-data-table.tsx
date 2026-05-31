@@ -8,7 +8,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -19,7 +19,14 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
@@ -67,18 +74,19 @@ export function ForumDataTable<TData, TValue>({
         return;
       }
 
-      // Here you would call the API to create a new forum
-      console.log("Creating forum:", { title: forumTitle, description: forumDescription });
+      console.log("Creating forum:", {
+        title: forumTitle,
+        description: forumDescription,
+      });
 
       await createForum(forumTitle, forumDescription);
 
       toast.success("Forum created successfully!");
-      
-      // Reset form and close dialog
+
       setForumTitle("");
       setForumDescription("");
       setIsDialogOpen(false);
-      
+
       // Trigger refresh
       if (onForumCreated) {
         onForumCreated();
@@ -134,12 +142,13 @@ export function ForumDataTable<TData, TValue>({
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-end gap-2">
-                  <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsDialogOpen(false)}
+                  >
                     Cancel
                   </Button>
-                  <Button onClick={handleCreateForum}>
-                    Create Forum
-                  </Button>
+                  <Button onClick={handleCreateForum}>Create Forum</Button>
                 </CardFooter>
               </Card>
             </DialogContent>
@@ -158,7 +167,7 @@ export function ForumDataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -177,7 +186,7 @@ export function ForumDataTable<TData, TValue>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

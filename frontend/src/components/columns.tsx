@@ -1,31 +1,30 @@
-import { type ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
- 
-import { Button } from "@/components/ui/button"
+import { type ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { banUser, unbanUser } from "@/services/users"
-import { toast } from "sonner"
+} from "@/components/ui/dropdown-menu";
+import { banUser, unbanUser } from "@/services/users";
+import { toast } from "sonner";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 export type Users = {
-  user_id: number
-  username: string
-  email: string
-  date_of_birth?: string
-  gender: "male" | "female" | "other"
-  role: "admin" | "user"
-  is_banned: boolean
-}
+  user_id: number;
+  username: string;
+  email: string;
+  date_of_birth?: string;
+  gender: "male" | "female" | "other";
+  role: "admin" | "user";
+  is_banned: boolean;
+};
 
-export const createColumns = (onUserUpdated?: () => void): ColumnDef<Users>[] => [
-
+export const createColumns = (
+  onUserUpdated?: () => void,
+): ColumnDef<Users>[] => [
   {
     accessorKey: "username",
     header: "Username",
@@ -52,7 +51,9 @@ export const createColumns = (onUserUpdated?: () => void): ColumnDef<Users>[] =>
     cell: ({ row }) => {
       const isBanned = row.getValue("is_banned") as boolean;
       return (
-        <span className={isBanned ? "text-red-600 font-semibold" : "text-green-600"}>
+        <span
+          className={isBanned ? "text-red-600 font-semibold" : "text-green-600"}
+        >
           {isBanned ? "Banned" : "Active"}
         </span>
       );
@@ -62,7 +63,7 @@ export const createColumns = (onUserUpdated?: () => void): ColumnDef<Users>[] =>
     id: "actions",
     cell: ({ row }) => {
       const user = row.original;
- 
+
       const handleBanToggle = async () => {
         try {
           if (user.is_banned) {
@@ -77,7 +78,9 @@ export const createColumns = (onUserUpdated?: () => void): ColumnDef<Users>[] =>
             onUserUpdated();
           }
         } catch (error) {
-          toast.error(`Failed to ${user.is_banned ? 'unban' : 'ban'} user: ${error}`);
+          toast.error(
+            `Failed to ${user.is_banned ? "unban" : "ban"} user: ${error}`,
+          );
         }
       };
 
@@ -94,10 +97,12 @@ export const createColumns = (onUserUpdated?: () => void): ColumnDef<Users>[] =>
             <DropdownMenuItem onClick={handleBanToggle}>
               {user.is_banned ? "Unban User" : "Ban User"}
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-red-600">Delete User</DropdownMenuItem>
+            <DropdownMenuItem className="text-red-600">
+              Delete User
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
 ];

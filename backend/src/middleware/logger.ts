@@ -10,7 +10,8 @@ const stream = {
 };
 
 // Define the format for morgan
-const morganFormat = ':remote-addr :method :url :status :res[content-length] - :response-time ms';
+const morganFormat =
+  ':remote-addr :method :url :status :res[content-length] - :response-time ms';
 
 // Create the morgan middleware
 export const morganMiddleware = morgan(morganFormat, { stream });

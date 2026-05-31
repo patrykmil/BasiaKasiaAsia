@@ -18,37 +18,42 @@ declare global {
 /**
  * Middleware to authenticate JWT tokens
  */
-export const authenticateJWT = (req: Request, res: Response, next: NextFunction): void => {
+export const authenticateJWT = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const authHeader = req.headers.authorization;
-  
+
   const authResult: AuthResult = authenticateToken(authHeader);
-  
+
   if (!authResult.success) {
-    res.status(401).json({ 
-      error: 'Unauthorized', 
-      message: authResult.error 
+    res.status(401).json({
+      error: 'Unauthorized',
+      message: authResult.error,
     });
     return;
   }
-  
+
   // Add user info to request object
   req.user = authResult.payload;
   next();
 };
 
-/**
- * Optional authentication middleware - doesn't fail if no token provided
- */
-export const optionalAuthentication = (req: Request, res: Response, next: NextFunction): void => {
+export const optionalAuthentication = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const authHeader = req.headers.authorization;
-  
+
   if (authHeader) {
     const authResult: AuthResult = authenticateToken(authHeader);
     if (authResult.success) {
       req.user = authResult.payload;
     }
   }
-  
+
   next();
 };
 
@@ -61,12 +66,12 @@ export const requireRole = (requiredRoleId: number) => {
       res.status(401).json({ error: 'Authentication required' });
       return;
     }
-    
+
     if (req.user.roleId !== requiredRoleId) {
       res.status(403).json({ error: 'Insufficient permissions' });
       return;
     }
-    
+
     next();
   };
 };

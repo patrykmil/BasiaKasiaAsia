@@ -35,11 +35,11 @@ export const connectDatabase = async (): Promise<void> => {
     await sequelize.authenticate();
     logger.info(`Database connection established successfully.`);
     logger.info(`Database file: ${sequelize.getDatabaseName()}`);
-    
+
     // Sync models with database
     await sequelize.sync();
     logger.info(`Database models synchronized.`);
-    
+
     // Check if database is empty (after sync)
     const roleCount = await Role.count();
     if (roleCount === 0) {

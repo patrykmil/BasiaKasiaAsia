@@ -16,13 +16,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import type { SerializedEditorState } from "lexical"
+import type { SerializedEditorState } from "lexical";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Editor } from "@/components/blocks/editor-00/editor";
 import { useState } from "react";
 
-import AsiaImg from '../assets/img/Asia.jpg';
+import AsiaImg from "../assets/img/Asia.jpg";
 
 const dummyNickname = "Asia";
 const dummyDate = "28-11-2001";
@@ -55,21 +55,26 @@ const initialValue = {
     type: "root",
     version: 1,
   },
-} as unknown as SerializedEditorState
+} as unknown as SerializedEditorState;
 
-  const handleUpdateSignature = () => {
-    alert("Signature updated successfully!");
-  };
+const handleUpdateSignature = () => {
+  alert("Signature updated successfully!");
+};
 
 function ProfilePage() {
-  const [editorState, setEditorState] = useState<SerializedEditorState>(initialValue)
+  const [editorState, setEditorState] =
+    useState<SerializedEditorState>(initialValue);
   // Edit mode and form state for profile fields
   const [isEditing, setIsEditing] = useState(false);
   const [nickname, setNickname] = useState<string>(dummyNickname);
   const [dateOfBirth, setDateOfBirth] = useState<string>(dummyDate);
   const [gender, setGender] = useState<string>("-");
   // backup to revert on cancel
-  const [backup, setBackup] = useState({ nickname: dummyNickname, dateOfBirth: dummyDate, gender: "-" });
+  const [backup, setBackup] = useState({
+    nickname: dummyNickname,
+    dateOfBirth: dummyDate,
+    gender: "-",
+  });
 
   return (
     <div className="w-full min-h-screen flex flex-col gap-4 p-4 bg-background">
@@ -100,7 +105,8 @@ function ProfilePage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-justify text-sm md:text-base">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua...
               </p>
 
               <Accordion type="single" collapsible className="w-full">
@@ -108,7 +114,7 @@ function ProfilePage() {
                   <AccordionTrigger className="text-xl font-semibold">
                     Profile Information
                   </AccordionTrigger>
-                    <AccordionContent className="space-y-4 text-sm md:text-base">
+                  <AccordionContent className="space-y-4 text-sm md:text-base">
                     {/* Table for Profile Data */}
                     <Table>
                       <TableHeader>
@@ -122,7 +128,10 @@ function ProfilePage() {
                           <TableCell>Nickname</TableCell>
                           <TableCell>
                             {isEditing ? (
-                              <Input value={nickname} onChange={(e) => setNickname(e.target.value)} />
+                              <Input
+                                value={nickname}
+                                onChange={(e) => setNickname(e.target.value)}
+                              />
                             ) : (
                               nickname
                             )}
@@ -132,7 +141,10 @@ function ProfilePage() {
                           <TableCell>Date of Birth</TableCell>
                           <TableCell>
                             {isEditing ? (
-                              <Input value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
+                              <Input
+                                value={dateOfBirth}
+                                onChange={(e) => setDateOfBirth(e.target.value)}
+                              />
                             ) : (
                               dateOfBirth
                             )}
@@ -146,7 +158,10 @@ function ProfilePage() {
                           <TableCell>Gender</TableCell>
                           <TableCell>
                             {isEditing ? (
-                              <Input value={gender} onChange={(e) => setGender(e.target.value)} />
+                              <Input
+                                value={gender}
+                                onChange={(e) => setGender(e.target.value)}
+                              />
                             ) : (
                               gender
                             )}
@@ -154,7 +169,7 @@ function ProfilePage() {
                         </TableRow>
                       </TableBody>
                     </Table>
-<div className="flex justify-end">
+                    <div className="flex justify-end">
                       {!isEditing ? (
                         <Button
                           onClick={() => {
@@ -196,8 +211,8 @@ function ProfilePage() {
                       </h3>
                       <div className="border rounded-md p-2">
                         <Editor
-                            editorSerializedState={editorState}
-                            onSerializedChange={(value) => setEditorState(value)}
+                          editorSerializedState={editorState}
+                          onSerializedChange={(value) => setEditorState(value)}
                         />
                       </div>
                       <div className="mt-3 flex justify-end">

@@ -14,14 +14,14 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
       res.status(401).json({ error: 'Authentication required' });
       return;
     }
-    
+
     const user = await userService.getUserById(req.user.userId, true);
-    
+
     if (!user) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
-    
+
     res.json(user);
   } catch (error) {
     logger.error('Error getting current user:', error);
@@ -35,19 +35,19 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = parseInt(req.params.id);
-    
+
     if (isNaN(userId)) {
       res.status(400).json({ error: 'Invalid user ID' });
       return;
     }
-    
+
     const user = await userService.getUserById(userId, true);
-    
+
     if (!user) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
-    
+
     res.json(user);
   } catch (error) {
     logger.error('Error getting user by ID:', error);
@@ -61,14 +61,14 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
 export const getUserByNickname = async (req: Request, res: Response): Promise<void> => {
   try {
     const { nickname } = req.params;
-    
+
     const user = await userService.getUserByNickname(nickname, true);
-    
+
     if (!user) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
-    
+
     res.json(user);
   } catch (error) {
     logger.error('Error getting user by nickname:', error);
@@ -83,20 +83,22 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
   try {
     const limit = parseInt(req.query.limit as string) || 50;
     const offset = parseInt(req.query.offset as string) || 0;
-    
+
     const users = await userService.getAllUsers(limit, offset);
-    
+
     // Transform users to the desired format
-    const formattedUsers = users.map(user => ({
+    const formattedUsers = users.map((user) => ({
       user_id: user.user_id,
       username: user.username,
       email: user.email,
-      date_of_birth: user.date_of_birth ? new Date(user.date_of_birth).toISOString().split('T')[0] : null,
+      date_of_birth: user.date_of_birth
+        ? new Date(user.date_of_birth).toISOString().split('T')[0]
+        : null,
       gender: user.gender,
       is_banned: user.is_banned,
       role: user.role?.name || 'user',
     }));
-    
+
     res.json(formattedUsers);
   } catch (error) {
     logger.error('Error getting all users:', error);
@@ -110,7 +112,7 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
 export const createUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, email, password, date_of_birth, gender, role_id } = req.body;
-    
+
     // Validate required fields
     if (!username || !email || !password) {
       res.status(400).json({ error: 'Username, email, and password are required' });
@@ -133,11 +135,11 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
       res.status(400).json({ error: 'Password must have at least 8 characters' });
       return;
     }
-    
+
     // Hash password
     const saltRounds = 12;
     const password_hash = await bcrypt.hash(password, saltRounds);
-    
+
     // Create user
     const newUser = await userService.createUser({
       username: username.trim(),
@@ -147,18 +149,20 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
       gender,
       role_id,
     });
-    
+
     res.status(201).json({
       message: 'User created successfully',
     });
   } catch (error) {
     logger.error('Error creating user:', error);
-    
+
     if (error instanceof Error && error.message.includes('UNIQUE constraint failed')) {
-      res.status(409).json({ error: 'User with this email or nickname already exists' });
+      res
+        .status(409)
+        .json({ error: 'User with this email or nickname already exists' });
       return;
     }
-    
+
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -170,30 +174,30 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
   try {
     const userId = parseInt(req.params.id);
     const { username, email, bio, role_id } = req.body;
-    
+
     if (isNaN(userId)) {
       res.status(400).json({ error: 'Invalid user ID' });
       return;
     }
-    
+
     // Check if user can update this profile (either own profile or admin)
     if (req.user && req.user.userId !== userId && req.user.roleId !== 3) {
-      res.status(403).json({ error: 'Cannot update another user\'s profile' });
+      res.status(403).json({ error: "Cannot update another user's profile" });
       return;
     }
-    
+
     const updatedUser = await userService.updateUser(userId, {
       username,
       email,
       bio,
       role_id,
     });
-    
+
     if (!updatedUser) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
-    
+
     res.json(updatedUser);
   } catch (error) {
     logger.error('Error updating user:', error);
@@ -207,25 +211,25 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = parseInt(req.params.id);
-    
+
     if (isNaN(userId)) {
       res.status(400).json({ error: 'Invalid user ID' });
       return;
     }
-    
+
     // Check if user can delete this profile (either own profile or admin)
     if (req.user && req.user.userId !== userId && req.user.roleId !== 3) {
-      res.status(403).json({ error: 'Cannot delete another user\'s profile' });
+      res.status(403).json({ error: "Cannot delete another user's profile" });
       return;
     }
-    
+
     const deleted = await userService.deleteUser(userId);
-    
+
     if (!deleted) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
-    
+
     res.status(204).send();
   } catch (error) {
     logger.error('Error deleting user:', error);
@@ -239,36 +243,38 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
-    
+
     if (!email || !password) {
       res.status(400).json({ error: 'Email and password are required' });
       return;
     }
 
     const normalizedEmail = String(email).trim().toLowerCase();
-    
+
     // Get user with password hash
     const user = await userService.getUserByEmail(normalizedEmail, true);
-    
+
     if (!user) {
       res.status(401).json({ error: 'Invalid credentials' });
       return;
     }
-    
+
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password_hash);
-    
+
     if (!isValidPassword) {
       res.status(401).json({ error: 'Invalid credentials' });
       return;
     }
-    
+
     // Check if user is banned
     if (user.is_banned) {
-      res.status(403).json({ error: 'Your account has been banned. Please contact support.' });
+      res
+        .status(403)
+        .json({ error: 'Your account has been banned. Please contact support.' });
       return;
     }
-    
+
     // Generate JWT access token
     const accessToken = generateToken({
       userId: user.user_id,
@@ -277,8 +283,6 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       roleId: user.role_id,
     });
 
-    // For now we don't have a separate refresh-token implementation.
-    // Use the same token as refresh token (placeholder) and set sensible expiry metadata
     const refreshToken = accessToken;
     const accessTokenExpiresIn = 60 * 60 * 24; // 24 hours in seconds
     const refreshTokenExpiresIn = 60 * 60 * 24 * 7; // 7 days in seconds
@@ -299,18 +303,12 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
 /**
  * Logout user
- * Note: Since we're using stateless JWT tokens, the actual logout happens on the client side
- * by removing the token. This endpoint confirms the logout action.
  */
 export const logoutUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    // In a stateless JWT system, we don't need to do anything on the server side
-    // The client will remove the token from storage
-    // If we had a token blacklist or database-tracked sessions, we'd invalidate them here
-    
-    res.json({ 
+    res.json({
       message: 'Logged out successfully',
-      success: true 
+      success: true,
     });
   } catch (error) {
     logger.error('Error during logout:', error);
@@ -324,25 +322,25 @@ export const logoutUser = async (req: Request, res: Response): Promise<void> => 
 export const banUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = parseInt(req.params.id);
-    
+
     if (isNaN(userId)) {
       res.status(400).json({ error: 'Invalid user ID' });
       return;
     }
-    
+
     // Check if user is admin
     if (req.user && req.user.roleId !== 3) {
       res.status(403).json({ error: 'Only administrators can ban users' });
       return;
     }
-    
+
     const bannedUser = await userService.banUser(userId);
-    
+
     if (!bannedUser) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
-    
+
     res.json({ message: 'User banned successfully', user: bannedUser });
   } catch (error) {
     logger.error('Error banning user:', error);
@@ -356,25 +354,25 @@ export const banUser = async (req: Request, res: Response): Promise<void> => {
 export const unbanUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = parseInt(req.params.id);
-    
+
     if (isNaN(userId)) {
       res.status(400).json({ error: 'Invalid user ID' });
       return;
     }
-    
+
     // Check if user is admin
     if (req.user && req.user.roleId !== 3) {
       res.status(403).json({ error: 'Only administrators can unban users' });
       return;
     }
-    
+
     const unbannedUser = await userService.unbanUser(userId);
-    
+
     if (!unbannedUser) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
-    
+
     res.json({ message: 'User unbanned successfully', user: unbannedUser });
   } catch (error) {
     logger.error('Error unbanning user:', error);

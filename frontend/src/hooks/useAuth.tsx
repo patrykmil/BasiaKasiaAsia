@@ -14,16 +14,27 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-
-export const AuthProvider = ({ children }: { children: React.ReactNode}) => {
-  const [access_token_type, setAccessTokenType] = useSessionStorage("access_token_type", null);
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [access_token_type, setAccessTokenType] = useSessionStorage(
+    "access_token_type",
+    null,
+  );
   const [accessToken, setAccessToken] = useSessionStorage("token", null);
-  const [refreshToken, setRefreshToken] = useSessionStorage("refreshToken", null);
-  const [expires_in, setExpiresIn] = useSessionStorage("access_token_expires_in", null);
-  const [refresh_token_expires_in, setRefreshTokenExpiresIn] = useSessionStorage("refresh_token_expires_in", null);
+  const [refreshToken, setRefreshToken] = useSessionStorage(
+    "refreshToken",
+    null,
+  );
+  const [expires_in, setExpiresIn] = useSessionStorage(
+    "access_token_expires_in",
+    null,
+  );
+  const [refresh_token_expires_in, setRefreshTokenExpiresIn] =
+    useSessionStorage("refresh_token_expires_in", null);
   const [role, setRole] = useSessionStorage("role", null);
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(Boolean(accessToken))
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    Boolean(accessToken),
+  );
 
   const login = async (email: string, master_hash: string) => {
     try {
@@ -34,7 +45,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode}) => {
       setRefreshToken(data.refresh_token);
       setExpiresIn(data.access_token_expires_in);
       setRefreshTokenExpiresIn(data.refresh_token_expires_in);
-      setIsAuthenticated(true)
+      setIsAuthenticated(true);
       if (data.role === "admin") {
         navigate("/admin");
         return;
@@ -73,7 +84,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode}) => {
       logout,
       isAuthenticated,
     }),
-    [accessToken, refreshToken, expires_in, refresh_token_expires_in, access_token_type, role, isAuthenticated]
+    [
+      accessToken,
+      refreshToken,
+      expires_in,
+      refresh_token_expires_in,
+      access_token_type,
+      role,
+      isAuthenticated,
+    ],
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

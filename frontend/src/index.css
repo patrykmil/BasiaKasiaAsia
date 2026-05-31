@@ -3,18 +3,18 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Make the page and the React root fill the full viewport.
-   Percent heights require parent elements to have explicit heights,
-   so set html and body to 100% as well. */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
 }
 
-/* Use border-box so padding doesn't increase element size unexpectedly */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -63,7 +63,6 @@ html, body, #root {
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 }
-
 
 @media (prefers-color-scheme: light) {
   :root {

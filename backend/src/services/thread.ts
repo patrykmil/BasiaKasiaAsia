@@ -44,7 +44,7 @@ export const getAllThreads = async (
 ): Promise<ThreadResponse[]> => {
   try {
     const whereClause = forumId ? { forum_id: forumId } : {};
-    
+
     const threads = await Thread.findAll({
       where: whereClause,
       limit,
@@ -80,7 +80,9 @@ export const getAllThreads = async (
 
     return threadsWithCounts;
   } catch (error) {
-    throw new Error(`Failed to get all threads: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get all threads: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -139,7 +141,9 @@ export const getThreadById = async (
       comments_count: commentsCount,
     } as ThreadResponse;
   } catch (error) {
-    throw new Error(`Failed to get thread by ID: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get thread by ID: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -206,7 +210,9 @@ export const getThreadsByUserId = async (
 
     return threadsWithCounts;
   } catch (error) {
-    throw new Error(`Failed to get threads by user ID: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get threads by user ID: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -231,7 +237,9 @@ export const createThread = async (threadData: {
 
     return createdThread;
   } catch (error) {
-    throw new Error(`Failed to create thread: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to create thread: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -258,7 +266,9 @@ export const updateThread = async (
 
     return getThreadById(threadId, false);
   } catch (error) {
-    throw new Error(`Failed to update thread: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to update thread: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -275,7 +285,9 @@ export const deleteThread = async (threadId: number): Promise<boolean> => {
 
     return deletedCount > 0;
   } catch (error) {
-    throw new Error(`Failed to delete thread: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to delete thread: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 

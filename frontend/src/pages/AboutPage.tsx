@@ -1,10 +1,10 @@
-import Cards from '@/components/Card';
-import Footer from '@/components/Foooter';
-import Menu from '@/components/Menu';
-import AboutUsBanner from '../assets/img/about_us_banner.jpg';
-import BasiaImg from '../assets/img/Basia.jpg';
-import KasiaImg from '../assets/img/Kasia.jpg';
-import AsiaImg from '../assets/img/Asia.jpg';
+import Cards from "@/components/Card";
+import Footer from "@/components/Foooter";
+import Menu from "@/components/Menu";
+import AboutUsBanner from "../assets/img/about_us_banner.jpg";
+import BasiaImg from "../assets/img/Basia.jpg";
+import KasiaImg from "../assets/img/Kasia.jpg";
+import AsiaImg from "../assets/img/Asia.jpg";
 
 function AboutPage() {
   return (
@@ -18,67 +18,67 @@ function AboutPage() {
         />
         <div className="max-w-4xl p-8 rounded-lg shadow-lg mb-8">
           <p className="text-lg leading-relaxed mb-6">
-            Welcome to our forum — a cozy online space created by three Japanese women:{' '}
-            <strong>Basia</strong>, <strong>Kasia</strong>, and <strong>Asia</strong>.
-            We are close friends who share a deep passion for celebrating womanhood in
-            all its beautiful forms. Together, we wanted to build a community where
-            women can openly discuss everyday life, share experiences, and inspire one
-            another.
+            Welcome to our forum — a cozy online space created by three Japanese
+            women: <strong>Basia</strong>, <strong>Kasia</strong>, and{" "}
+            <strong>Asia</strong>. We are close friends who share a deep passion
+            for celebrating womanhood in all its beautiful forms. Together, we
+            wanted to build a community where women can openly discuss everyday
+            life, share experiences, and inspire one another.
           </p>
 
           <p className="text-lg leading-relaxed mb-6">
-            On our forum, we explore topics that reflect the heart of a woman's world,
-            including:
+            On our forum, we explore topics that reflect the heart of a woman's
+            world, including:
           </p>
 
           <ul className="space-y-3 mb-6 ml-6">
             <li className="flex items-start">
-              <span className="inline-block w-2 h-2 bg-white rounded-full mt-2 mr-4 flex-shrink-0"></span>
+              <span className="inline-block w-2 h-2 bg-white rounded-full mt-2 mr-4 shrink-0"></span>
               <span>
-                <strong>Daily life and responsibilities</strong> — balancing roles,
-                managing routines, and finding time for ourselves
+                <strong>Daily life and responsibilities</strong> — balancing
+                roles, managing routines, and finding time for ourselves
               </span>
             </li>
             <li className="flex items-start">
-              <span className="inline-block w-2 h-2 bg-white rounded-full mt-2 mr-4 flex-shrink-0"></span>
+              <span className="inline-block w-2 h-2 bg-white rounded-full mt-2 mr-4 shrink-0"></span>
               <span>
-                <strong>Home & cleaning tips</strong> — smarter ways to keep our homes
-                warm and welcoming
+                <strong>Home & cleaning tips</strong> — smarter ways to keep our
+                homes warm and welcoming
               </span>
             </li>
             <li className="flex items-start">
-              <span className="inline-block w-2 h-2 bg-white rounded-full mt-2 mr-4 flex-shrink-0"></span>
+              <span className="inline-block w-2 h-2 bg-white rounded-full mt-2 mr-4 shrink-0"></span>
               <span>
-                <strong>Cooking & traditional recipes</strong> — from quick everyday
-                meals to special dishes full of flavor and culture
+                <strong>Cooking & traditional recipes</strong> — from quick
+                everyday meals to special dishes full of flavor and culture
               </span>
             </li>
             <li className="flex items-start">
-              <span className="inline-block w-2 h-2 bg-white rounded-full mt-2 mr-4 flex-shrink-0"></span>
+              <span className="inline-block w-2 h-2 bg-white rounded-full mt-2 mr-4 shrink-0"></span>
               <span>
-                <strong>Fashion & personal style</strong> — expressing femininity,
-                trends, and confidence
+                <strong>Fashion & personal style</strong> — expressing
+                femininity, trends, and confidence
               </span>
             </li>
             <li className="flex items-start">
-              <span className="inline-block w-2 h-2 bg-white rounded-full mt-2 mr-4 flex-shrink-0"></span>
+              <span className="inline-block w-2 h-2 bg-white rounded-full mt-2 mr-4 shrink-0"></span>
               <span>
-                <strong>Handmade crafts & DIY</strong> — creative projects that bring
-                joy and personal touch to life
+                <strong>Handmade crafts & DIY</strong> — creative projects that
+                bring joy and personal touch to life
               </span>
             </li>
           </ul>
 
           <p className="text-lg leading-relaxed mb-6">
-            Our mission is to create a friendly, supportive environment where every
-            woman feels seen, heard, and inspired. Whether you're looking for advice,
-            motivation, or just a place to connect with others who understand your
-            journey — you're in the right place.
+            Our mission is to create a friendly, supportive environment where
+            every woman feels seen, heard, and inspired. Whether you're looking
+            for advice, motivation, or just a place to connect with others who
+            understand your journey — you're in the right place.
           </p>
 
           <p className="text-lg leading-relaxed mb-6">
-            Join us, share your voice, and let's grow together in strength, creativity,
-            and sisterhood.
+            Join us, share your voice, and let's grow together in strength,
+            creativity, and sisterhood.
           </p>
 
           <div className="text-lg">

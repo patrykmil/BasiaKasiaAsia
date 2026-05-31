@@ -1,4 +1,15 @@
-import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany, Index } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  PrimaryKey,
+  AutoIncrement,
+  ForeignKey,
+  BelongsTo,
+  HasMany,
+  Index,
+} from 'sequelize-typescript';
 import { Forum } from './Forum';
 import { User } from './User';
 import { Comment } from './Comment';

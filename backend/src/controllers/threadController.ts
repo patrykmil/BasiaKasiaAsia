@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import * as threadService from '../services/thread';
 import logger from '../config/logger';
 
-
 /**
  * Get all threads ordered by newest first
  */
@@ -10,7 +9,9 @@ export const getAllThreads = async (req: Request, res: Response): Promise<void> 
   try {
     const limit = parseInt(req.query.limit as string) || 20;
     const offset = parseInt(req.query.offset as string) || 0;
-    const forumId = req.query.forum_id ? parseInt(req.query.forum_id as string) : undefined;
+    const forumId = req.query.forum_id
+      ? parseInt(req.query.forum_id as string)
+      : undefined;
 
     // Validate pagination parameters
     if (limit > 100) {
@@ -67,7 +68,9 @@ export const getThreadById = async (req: Request, res: Response): Promise<void> 
       title: thread.title,
       description: thread.description || '',
       author: thread.user?.username || 'Unknown',
-      date: thread.created_at ? new Date(thread.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      date: thread.created_at
+        ? new Date(thread.created_at).toISOString().split('T')[0]
+        : new Date().toISOString().split('T')[0],
     };
 
     res.json(formattedThread);
@@ -80,7 +83,10 @@ export const getThreadById = async (req: Request, res: Response): Promise<void> 
 /**
  * Get threads by forum ID
  */
-export const getThreadsByForumId = async (req: Request, res: Response): Promise<void> => {
+export const getThreadsByForumId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const forumId = parseInt(req.params.forumId);
     const limit = parseInt(req.query.limit as string) || 20;
@@ -99,11 +105,13 @@ export const getThreadsByForumId = async (req: Request, res: Response): Promise<
     const threads = await threadService.getThreadsByForumId(forumId, limit, offset);
 
     // Transform threads to the desired format
-    const formattedThreads = threads.map(thread => ({
+    const formattedThreads = threads.map((thread) => ({
       id: String(thread.thread_id),
       title: thread.title,
       author: thread.user?.username || 'Unknown',
-      date: thread.created_at ? new Date(thread.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      date: thread.created_at
+        ? new Date(thread.created_at).toISOString().split('T')[0]
+        : new Date().toISOString().split('T')[0],
       replies: thread.comments_count || 0,
     }));
 
@@ -117,7 +125,10 @@ export const getThreadsByForumId = async (req: Request, res: Response): Promise<
 /**
  * Get threads by user ID
  */
-export const getThreadsByUserId = async (req: Request, res: Response): Promise<void> => {
+export const getThreadsByUserId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const userId = parseInt(req.params.userId);
     const limit = parseInt(req.query.limit as string) || 20;
@@ -193,7 +204,10 @@ export const createThread = async (req: Request, res: Response): Promise<void> =
   } catch (error) {
     logger.error('Error creating thread:', error);
 
-    if (error instanceof Error && error.message.includes('FOREIGN KEY constraint failed')) {
+    if (
+      error instanceof Error &&
+      error.message.includes('FOREIGN KEY constraint failed')
+    ) {
       res.status(400).json({ error: 'Invalid forum ID' });
       return;
     }
@@ -242,7 +256,7 @@ export const updateThread = async (req: Request, res: Response): Promise<void> =
 
     // Check if user owns the thread or is admin
     if (currentThread.user_id !== req.user.userId && req.user.roleId !== 3) {
-      res.status(403).json({ error: 'Cannot update another user\'s thread' });
+      res.status(403).json({ error: "Cannot update another user's thread" });
       return;
     }
 
@@ -292,7 +306,7 @@ export const deleteThread = async (req: Request, res: Response): Promise<void> =
 
     // Check if user owns the thread or is admin
     if (currentThread.user_id !== req.user.userId && req.user.roleId !== 3) {
-      res.status(403).json({ error: 'Cannot delete another user\'s thread' });
+      res.status(403).json({ error: "Cannot delete another user's thread" });
       return;
     }
 

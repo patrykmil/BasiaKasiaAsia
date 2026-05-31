@@ -11,6 +11,7 @@
           myShell = pkgs.mkShell {
             packages = with pkgs; [
               nodejs
+              prettier
             ];
           };
         in

@@ -1,24 +1,23 @@
-import { type ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
-import { Link } from "react-router-dom"
- 
-import { Button } from "@/components/ui/button"
+import { type ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
+
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-// This type is used to define the shape of our data.
 export type Forums = {
-  id: string
-  title: string
-  description?: string
-  creator: string
-  created_at: string
-}
+  id: string;
+  title: string;
+  description?: string;
+  creator: string;
+  created_at: string;
+};
 
 export const forumColumns: ColumnDef<Forums>[] = [
   {
@@ -26,13 +25,13 @@ export const forumColumns: ColumnDef<Forums>[] = [
     header: "Forum Title",
     cell: ({ row }) => {
       return (
-        <Link 
+        <Link
           to={`/forum/${row.original.id}`}
           className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
         >
           {row.getValue("title")}
         </Link>
-      )
+      );
     },
   },
   {
@@ -44,7 +43,7 @@ export const forumColumns: ColumnDef<Forums>[] = [
         <div className="max-w-md truncate">
           {description || "No description"}
         </div>
-      )
+      );
     },
   },
   {
@@ -62,7 +61,6 @@ export const forumColumns: ColumnDef<Forums>[] = [
   {
     id: "actions",
     cell: () => {
- 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -77,7 +75,7 @@ export const forumColumns: ColumnDef<Forums>[] = [
             <DropdownMenuItem>Delete Forum</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];

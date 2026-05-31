@@ -12,6 +12,11 @@ router.get('/categories/:categoryId/forums', forumController.getForumsByCategory
 // Admin-only routes (require authentication and admin role)
 router.post('/forums', authenticateJWT, requireAdmin, forumController.createForum);
 router.put('/forums/:id', authenticateJWT, requireAdmin, forumController.updateForum);
-router.delete('/forums/:id', authenticateJWT, requireAdmin, forumController.deleteForum);
+router.delete(
+  '/forums/:id',
+  authenticateJWT,
+  requireAdmin,
+  forumController.deleteForum
+);
 
 export default router;

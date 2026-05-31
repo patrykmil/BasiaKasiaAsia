@@ -8,7 +8,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -18,7 +18,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { RegisterCard } from "@/components/registerCard";
 import { toast } from "sonner";
 import { register } from "../services/auth";
@@ -61,38 +68,45 @@ export function DataTable<TData, TValue>({
     date: Date | undefined;
   }) => {
     try {
-    if (!data.name || !data.email || !data.password) {
-      toast.warning("Name, email and password are required");
-      return;
-    }
+      if (!data.name || !data.email || !data.password) {
+        toast.warning("Name, email and password are required");
+        return;
+      }
 
-    if (data.name.trim().length < 3) {
-      toast.warning("Username must have at least 3 characters");
-      return;
-    }
+      if (data.name.trim().length < 3) {
+        toast.warning("Username must have at least 3 characters");
+        return;
+      }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email.trim())) {
-      toast.warning("Invalid email format");
-      return;
-    }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(data.email.trim())) {
+        toast.warning("Invalid email format");
+        return;
+      }
 
-    if (data.password.length < 8) {
-      toast.warning("Password must be at least 8 characters");
-      return;
-    }
+      if (data.password.length < 8) {
+        toast.warning("Password must be at least 8 characters");
+        return;
+      }
 
-    if (data.password !== data.repeatPassword) {
-      toast.warning("Passwords do not match");
-      return;
-    }
+      if (data.password !== data.repeatPassword) {
+        toast.warning("Passwords do not match");
+        return;
+      }
 
-    await register(data.email, data.password, data.name, data.date, data.gender, 3);
-    toast.success("Admin registered successfully!");
+      await register(
+        data.email,
+        data.password,
+        data.name,
+        data.date,
+        data.gender,
+        3,
+      );
+      toast.success("Admin registered successfully!");
     } catch (error) {
       toast.error(`Registration error: ${error}`);
     }
-  }
+  };
 
   return (
     <div className="rounded-md border px-2 bg-white">
@@ -138,7 +152,7 @@ export function DataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -157,7 +171,7 @@ export function DataTable<TData, TValue>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

@@ -15,13 +15,14 @@ instance.interceptors.request.use(
     const token = sessionStorage.getItem("token");
 
     if (type && token) {
-      config.headers["Authorization"] = `${JSON.parse(type)} ${JSON.parse(token)}`;
+      config.headers["Authorization"] =
+        `${JSON.parse(type)} ${JSON.parse(token)}`;
     }
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 export default instance;

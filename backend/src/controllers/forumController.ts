@@ -9,7 +9,9 @@ export const getAllForums = async (req: Request, res: Response): Promise<void> =
   try {
     const limit = parseInt(req.query.limit as string) || 50;
     const offset = parseInt(req.query.offset as string) || 0;
-    const categoryId = req.query.category_id ? parseInt(req.query.category_id as string) : undefined;
+    const categoryId = req.query.category_id
+      ? parseInt(req.query.category_id as string)
+      : undefined;
 
     // Validate pagination parameters
     if (limit > 100) {
@@ -25,7 +27,7 @@ export const getAllForums = async (req: Request, res: Response): Promise<void> =
     const forums = await forumService.getAllForums(limit, offset, categoryId);
 
     // Transform forums to the desired format
-    const formattedForums = forums.map(forum => ({
+    const formattedForums = forums.map((forum) => ({
       id: String(forum.forum_id),
       title: forum.title,
       description: forum.description || '',
@@ -70,7 +72,10 @@ export const getForumById = async (req: Request, res: Response): Promise<void> =
 /**
  * Get forums by category ID
  */
-export const getForumsByCategoryId = async (req: Request, res: Response): Promise<void> => {
+export const getForumsByCategoryId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const categoryId = parseInt(req.params.categoryId);
     const limit = parseInt(req.query.limit as string) || 50;
@@ -151,7 +156,10 @@ export const createForum = async (req: Request, res: Response): Promise<void> =>
   } catch (error) {
     logger.error('Error creating forum:', error);
 
-    if (error instanceof Error && error.message.includes('FOREIGN KEY constraint failed')) {
+    if (
+      error instanceof Error &&
+      error.message.includes('FOREIGN KEY constraint failed')
+    ) {
       res.status(400).json({ error: 'Invalid category ID' });
       return;
     }
@@ -213,7 +221,10 @@ export const updateForum = async (req: Request, res: Response): Promise<void> =>
   } catch (error) {
     logger.error('Error updating forum:', error);
 
-    if (error instanceof Error && error.message.includes('FOREIGN KEY constraint failed')) {
+    if (
+      error instanceof Error &&
+      error.message.includes('FOREIGN KEY constraint failed')
+    ) {
       res.status(400).json({ error: 'Invalid category ID' });
       return;
     }
@@ -263,10 +274,14 @@ export const deleteForum = async (req: Request, res: Response): Promise<void> =>
     res.status(204).send();
   } catch (error) {
     logger.error('Error deleting forum:', error);
-    
-    if (error instanceof Error && error.message.includes('FOREIGN KEY constraint failed')) {
-      res.status(400).json({ 
-        error: 'Cannot delete forum that contains threads. Please delete all threads first.' 
+
+    if (
+      error instanceof Error &&
+      error.message.includes('FOREIGN KEY constraint failed')
+    ) {
+      res.status(400).json({
+        error:
+          'Cannot delete forum that contains threads. Please delete all threads first.',
       });
       return;
     }

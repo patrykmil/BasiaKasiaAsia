@@ -38,9 +38,9 @@ export const getCommentsByThreadId = async (
   try {
     // Get top-level comments (no parent)
     const topLevelComments = await Comment.findAll({
-      where: { 
+      where: {
         thread_id: threadId,
-        parent_comment_id: null
+        parent_comment_id: null,
       },
       limit,
       offset,
@@ -55,7 +55,7 @@ export const getCommentsByThreadId = async (
     });
 
     if (!includeReplies) {
-      return topLevelComments.map(comment => comment.toJSON()) as CommentResponse[];
+      return topLevelComments.map((comment) => comment.toJSON()) as CommentResponse[];
     }
 
     // Get replies for each top-level comment
@@ -63,7 +63,7 @@ export const getCommentsByThreadId = async (
       topLevelComments.map(async (comment) => {
         const replies = await getRepliesForComment(comment.comment_id);
         const repliesCount = await Comment.count({
-          where: { parent_comment_id: comment.comment_id }
+          where: { parent_comment_id: comment.comment_id },
         });
 
         return {
@@ -76,7 +76,9 @@ export const getCommentsByThreadId = async (
 
     return commentsWithReplies;
   } catch (error) {
-    throw new Error(`Failed to get comments by thread ID: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get comments by thread ID: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -104,15 +106,18 @@ export const getRepliesForComment = async (
     });
 
     if (maxDepth <= 1) {
-      return replies.map(reply => reply.toJSON()) as CommentResponse[];
+      return replies.map((reply) => reply.toJSON()) as CommentResponse[];
     }
 
     // Recursively get nested replies
     const repliesWithNested = await Promise.all(
       replies.map(async (reply) => {
-        const nestedReplies = await getRepliesForComment(reply.comment_id, maxDepth - 1);
+        const nestedReplies = await getRepliesForComment(
+          reply.comment_id,
+          maxDepth - 1
+        );
         const repliesCount = await Comment.count({
-          where: { parent_comment_id: reply.comment_id }
+          where: { parent_comment_id: reply.comment_id },
         });
 
         return {
@@ -125,7 +130,9 @@ export const getRepliesForComment = async (
 
     return repliesWithNested;
   } catch (error) {
-    throw new Error(`Failed to get replies for comment: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get replies for comment: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -158,7 +165,7 @@ export const getCommentById = async (
     if (includeReplies) {
       replies = await getRepliesForComment(commentId);
       repliesCount = await Comment.count({
-        where: { parent_comment_id: commentId }
+        where: { parent_comment_id: commentId },
       });
     }
 
@@ -168,7 +175,9 @@ export const getCommentById = async (
       replies_count: repliesCount,
     } as CommentResponse;
   } catch (error) {
-    throw new Error(`Failed to get comment by ID: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get comment by ID: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -204,9 +213,11 @@ export const getCommentsByUserId = async (
       ],
     });
 
-    return comments.map(comment => comment.toJSON()) as CommentResponse[];
+    return comments.map((comment) => comment.toJSON()) as CommentResponse[];
   } catch (error) {
-    throw new Error(`Failed to get comments by user ID: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get comments by user ID: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -228,7 +239,7 @@ export const createComment = async (commentData: {
       if (!parentComment) {
         throw new Error('Parent comment not found');
       }
-      
+
       // Ensure parent comment belongs to the same thread
       if (parentComment.thread_id !== commentData.thread_id) {
         throw new Error('Parent comment must belong to the same thread');
@@ -244,7 +255,9 @@ export const createComment = async (commentData: {
 
     return createdComment;
   } catch (error) {
-    throw new Error(`Failed to create comment: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to create comment: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -269,7 +282,9 @@ export const updateComment = async (
 
     return getCommentById(commentId, false);
   } catch (error) {
-    throw new Error(`Failed to update comment: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to update comment: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -282,7 +297,7 @@ export const deleteComment = async (commentId: number): Promise<boolean> => {
   try {
     // Delete all replies first (cascade delete)
     await deleteCommentReplies(commentId);
-    
+
     // Delete the comment itself
     const deletedCount = await Comment.destroy({
       where: { comment_id: commentId },
@@ -290,7 +305,9 @@ export const deleteComment = async (commentId: number): Promise<boolean> => {
 
     return deletedCount > 0;
   } catch (error) {
-    throw new Error(`Failed to delete comment: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to delete comment: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -315,7 +332,9 @@ const deleteCommentReplies = async (parentCommentId: number): Promise<void> => {
       where: { parent_comment_id: parentCommentId },
     });
   } catch (error) {
-    throw new Error(`Failed to delete comment replies: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to delete comment replies: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -331,9 +350,9 @@ export const getCommentStats = async (threadId: number) => {
     });
 
     const topLevelComments = await Comment.count({
-      where: { 
+      where: {
         thread_id: threadId,
-        parent_comment_id: null 
+        parent_comment_id: null,
       },
     });
 
@@ -345,7 +364,9 @@ export const getCommentStats = async (threadId: number) => {
       replies: replies,
     };
   } catch (error) {
-    throw new Error(`Failed to get comment stats: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get comment stats: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 

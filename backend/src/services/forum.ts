@@ -44,7 +44,7 @@ export const getAllForums = async (
 ): Promise<ForumResponse[]> => {
   try {
     const whereClause = categoryId ? { category_id: categoryId } : {};
-    
+
     const forums = await Forum.findAll({
       where: whereClause,
       limit,
@@ -91,7 +91,9 @@ export const getAllForums = async (
 
     return forumsWithStats;
   } catch (error) {
-    throw new Error(`Failed to get all forums: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get all forums: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -106,7 +108,6 @@ export const getForumById = async (
   includeThreads: boolean = false
 ): Promise<ForumResponse | null> => {
   try {
-
     const forum = await Forum.findByPk(forumId);
 
     if (!forum) return null;
@@ -140,7 +141,9 @@ export const getForumById = async (
       latest_thread: latestThread,
     } as ForumResponse;
   } catch (error) {
-    throw new Error(`Failed to get forum by ID: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get forum by ID: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -179,7 +182,9 @@ export const createForum = async (forumData: {
 
     return createdForum;
   } catch (error) {
-    throw new Error(`Failed to create forum: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to create forum: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -206,7 +211,9 @@ export const updateForum = async (
 
     return getForumById(forumId, false);
   } catch (error) {
-    throw new Error(`Failed to update forum: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to update forum: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -223,7 +230,9 @@ export const deleteForum = async (forumId: number): Promise<boolean> => {
 
     return deletedCount > 0;
   } catch (error) {
-    throw new Error(`Failed to delete forum: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to delete forum: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 

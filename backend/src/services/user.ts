@@ -25,13 +25,13 @@ export const ensureDefaultRoles = async (): Promise<void> => {
   try {
     // Check if any roles exist
     const roleCount = await Role.count();
-    
+
     if (roleCount === 0) {
       // Create default roles
       await Role.bulkCreate([
         { name: 'user' },
         { name: 'moderator' },
-        { name: 'admin' }
+        { name: 'admin' },
       ]);
       logger.info('Default roles created');
     }
@@ -47,31 +47,34 @@ export const ensureDefaultAdmin = async (): Promise<void> => {
   try {
     // Check if any admin users exist
     const adminRole = await Role.findOne({ where: { name: 'admin' } });
-    
+
     if (!adminRole) {
       logger.error('Admin role not found. Please ensure roles are created first.');
       return;
     }
-    
+
     const adminCount = await User.count({ where: { role_id: adminRole.role_id } });
-    
+
     if (adminCount === 0) {
       // Create default admin user
       const bcrypt = require('bcrypt');
       const defaultAdminPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'admin123';
       const hashedPassword = await bcrypt.hash(defaultAdminPassword, 10);
-      
+
       await User.create({
         username: 'admin',
         email: 'admin@example.com',
         password_hash: hashedPassword,
         role_id: adminRole.role_id,
         gender: 'non-binary',
-        date_of_birth: new Date('1990-01-01')
+        date_of_birth: new Date('1990-01-01'),
       });
-      
+
       logger.info('Default admin user created');
-      logger.info('Admin credentials - Email: admin@example.com, Password: ' + defaultAdminPassword);
+      logger.info(
+        'Admin credentials - Email: admin@example.com, Password: ' +
+          defaultAdminPassword
+      );
       logger.warn('⚠️  Please change the default admin password after first login!');
     }
   } catch (error) {
@@ -107,12 +110,14 @@ export const getUserById = async (
       include: includeRole ? [{ model: Role, as: 'role' }] : [],
       attributes: { exclude: ['password_hash'] },
     });
-    
+
     if (!user) return null;
-    
+
     return user.toJSON() as UserResponse;
   } catch (error) {
-    throw new Error(`Failed to get user by ID: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get user by ID: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -132,12 +137,14 @@ export const getUserByNickname = async (
       include: includeRole ? [{ model: Role, as: 'role' }] : [],
       attributes: { exclude: ['password_hash'] },
     });
-    
+
     if (!user) return null;
-    
+
     return user.toJSON() as UserResponse;
   } catch (error) {
-    throw new Error(`Failed to get user by nickname: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get user by nickname: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -154,22 +161,22 @@ export const getUserByEmail = async (
   try {
     const user = await User.findOne({
       where: { email },
-      attributes: includePasswordHash 
-        ? undefined 
-        : { exclude: ['password_hash'] },
+      attributes: includePasswordHash ? undefined : { exclude: ['password_hash'] },
       include: [
-        { 
-          model: Role, 
+        {
+          model: Role,
           as: 'role',
-          attributes: ['role_id', 'name']
-        }
+          attributes: ['role_id', 'name'],
+        },
       ],
     });
-    
+
     if (!user) return null;
     return user.toJSON();
   } catch (error) {
-    throw new Error(`Failed to get user by email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get user by email: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -191,10 +198,12 @@ export const getAllUsers = async (
       include: [{ model: Role, as: 'role' }],
       order: [['created_at', 'DESC']],
     });
-    
-    return users.map(user => user.toJSON()) as UserResponse[];
+
+    return users.map((user) => user.toJSON()) as UserResponse[];
   } catch (error) {
-    throw new Error(`Failed to get all users: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to get all users: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -214,13 +223,15 @@ export const createUser = async (userData: {
   try {
     // Ensure default roles exist
     await ensureDefaultRoles();
-    
+
     // Validate role_id if provided
     let validatedRoleId: number | undefined = userData.role_id;
     if (userData.role_id) {
       const roleExists = await Role.findByPk(userData.role_id);
       if (!roleExists) {
-        logger.warn(`Role ID ${userData.role_id} does not exist, using default user role`);
+        logger.warn(
+          `Role ID ${userData.role_id} does not exist, using default user role`
+        );
         const defaultRoleId = await getDefaultUserRoleId();
         validatedRoleId = defaultRoleId || undefined;
       }
@@ -229,21 +240,23 @@ export const createUser = async (userData: {
       const defaultRoleId = await getDefaultUserRoleId();
       validatedRoleId = defaultRoleId || undefined;
     }
-    
+
     const user = await User.create({
       ...userData,
-      role_id: validatedRoleId
+      role_id: validatedRoleId,
     });
-    
+
     const userResponse = await getUserById(user.user_id, true);
-    
+
     if (!userResponse) {
       throw new Error('Failed to retrieve created user');
     }
-    
+
     return userResponse;
   } catch (error) {
-    throw new Error(`Failed to create user: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to create user: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -266,12 +279,14 @@ export const updateUser = async (
     const [affectedCount] = await User.update(updateData, {
       where: { user_id: userId },
     });
-    
+
     if (affectedCount === 0) return null;
-    
+
     return getUserById(userId, true);
   } catch (error) {
-    throw new Error(`Failed to update user: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to update user: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -288,7 +303,9 @@ export const deleteUser = async (userId: number): Promise<boolean> => {
 
     return deletedCount > 0;
   } catch (error) {
-    throw new Error(`Failed to delete user: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to delete user: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -308,7 +325,9 @@ export const banUser = async (userId: number): Promise<UserResponse | null> => {
 
     return getUserById(userId, true);
   } catch (error) {
-    throw new Error(`Failed to ban user: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to ban user: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -328,9 +347,12 @@ export const unbanUser = async (userId: number): Promise<UserResponse | null> =>
 
     return getUserById(userId, true);
   } catch (error) {
-    throw new Error(`Failed to unban user: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to unban user: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
-};export default {
+};
+export default {
   getUserById,
   getUserByNickname,
   getUserByEmail,

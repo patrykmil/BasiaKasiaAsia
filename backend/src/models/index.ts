@@ -14,10 +14,4 @@ import { Forum } from './Forum';
 import { Thread } from './Thread';
 import { Comment } from './Comment';
 
-export const models = [
-  Role,
-  User,
-  Forum,
-  Thread,
-  Comment,
-];
+export const models = [Role, User, Forum, Thread, Comment];
