@@ -76,7 +76,7 @@ resource "azurerm_linux_web_app" "backend" {
 
   site_config {
     always_on        = true
-    app_command_line = "sh -c 'mkdir -p /home/data && node dist/index.js'"
+    app_command_line = "node dist/src/index.js"
 
     application_stack {
       node_version = "20-lts"
@@ -86,10 +86,13 @@ resource "azurerm_linux_web_app" "backend" {
   app_settings = {
     WEBSITE_NODE_DEFAULT_VERSION   = "20-lts"
     WEBSITES_PORT                  = "8000"
+    WEBSITE_RUN_FROM_PACKAGE       = "1"
     SCM_DO_BUILD_DURING_DEPLOYMENT = "false"
     NODE_ENV                       = "production"
     PORT                           = "8000"
-    DB_PATH                        = "/home/data/database.db"
+    DB_PATH                        = "/home/site/database.db"
+    LOG_DIR                        = "/home/site/logs"
+    CORS_ORIGIN                    = "https://${azurerm_linux_web_app.frontend.default_hostname}"
     JWT_SECRET                     = var.jwt_secret
     JWT_EXPIRES_IN                 = var.jwt_expires_in
     DEFAULT_ADMIN_PASSWORD         = var.default_admin_password

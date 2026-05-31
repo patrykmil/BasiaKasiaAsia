@@ -10,8 +10,21 @@ import { morganMiddleware } from './middleware/logger';
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+const configuredOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim()).filter(Boolean)
+  : [];
+
+const corsOptions: cors.CorsOptions = {
+  origin: configuredOrigins.length > 0 ? configuredOrigins : true,
+  credentials: true,
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204,
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
