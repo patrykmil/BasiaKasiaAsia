@@ -47,7 +47,7 @@ export const getAllThreads = async (req: Request, res: Response): Promise<void> 
  */
 export const getThreadById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const threadId = parseInt(req.params.id);
+    const threadId = parseInt(req.params.id as string);
     const includeComments = req.query.include_comments === 'true';
 
     if (isNaN(threadId)) {
@@ -88,7 +88,7 @@ export const getThreadsByForumId = async (
   res: Response
 ): Promise<void> => {
   try {
-    const forumId = parseInt(req.params.forumId);
+    const forumId = parseInt(req.params.forumId as string);
     const limit = parseInt(req.query.limit as string) || 20;
     const offset = parseInt(req.query.offset as string) || 0;
 
@@ -130,7 +130,7 @@ export const getThreadsByUserId = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userId = parseInt(req.params.userId);
+    const userId = parseInt(req.params.userId as string);
     const limit = parseInt(req.query.limit as string) || 20;
     const offset = parseInt(req.query.offset as string) || 0;
 
@@ -221,7 +221,7 @@ export const createThread = async (req: Request, res: Response): Promise<void> =
  */
 export const updateThread = async (req: Request, res: Response): Promise<void> => {
   try {
-    const threadId = parseInt(req.params.id);
+    const threadId = parseInt(req.params.id as string);
     const { title, description, forum_id } = req.body;
 
     if (isNaN(threadId)) {
@@ -284,7 +284,7 @@ export const updateThread = async (req: Request, res: Response): Promise<void> =
  */
 export const deleteThread = async (req: Request, res: Response): Promise<void> => {
   try {
-    const threadId = parseInt(req.params.id);
+    const threadId = parseInt(req.params.id as string);
 
     if (isNaN(threadId)) {
       res.status(400).json({ error: 'Invalid thread ID' });

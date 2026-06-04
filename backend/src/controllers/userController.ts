@@ -34,7 +34,7 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
  */
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.params.id as string);
 
     if (isNaN(userId)) {
       res.status(400).json({ error: 'Invalid user ID' });
@@ -62,7 +62,7 @@ export const getUserByNickname = async (req: Request, res: Response): Promise<vo
   try {
     const { nickname } = req.params;
 
-    const user = await userService.getUserByNickname(nickname, true);
+    const user = await userService.getUserByNickname(nickname as string, true);
 
     if (!user) {
       res.status(404).json({ error: 'User not found' });
@@ -172,7 +172,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
  */
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.params.id as string);
     const { username, email, bio, role_id } = req.body;
 
     if (isNaN(userId)) {
@@ -210,7 +210,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
  */
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.params.id as string);
 
     if (isNaN(userId)) {
       res.status(400).json({ error: 'Invalid user ID' });
@@ -321,7 +321,7 @@ export const logoutUser = async (req: Request, res: Response): Promise<void> => 
  */
 export const banUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.params.id as string);
 
     if (isNaN(userId)) {
       res.status(400).json({ error: 'Invalid user ID' });
@@ -353,7 +353,7 @@ export const banUser = async (req: Request, res: Response): Promise<void> => {
  */
 export const unbanUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.params.id as string);
 
     if (isNaN(userId)) {
       res.status(400).json({ error: 'Invalid user ID' });

@@ -47,7 +47,7 @@ export const getAllForums = async (req: Request, res: Response): Promise<void> =
  */
 export const getForumById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const forumId = parseInt(req.params.id);
+    const forumId = parseInt(req.params.id as string);
     const includeThreads = req.query.include_threads === 'true';
 
     if (isNaN(forumId)) {
@@ -77,7 +77,7 @@ export const getForumsByCategoryId = async (
   res: Response
 ): Promise<void> => {
   try {
-    const categoryId = parseInt(req.params.categoryId);
+    const categoryId = parseInt(req.params.categoryId as string);
     const limit = parseInt(req.query.limit as string) || 50;
     const offset = parseInt(req.query.offset as string) || 0;
 
@@ -173,7 +173,7 @@ export const createForum = async (req: Request, res: Response): Promise<void> =>
  */
 export const updateForum = async (req: Request, res: Response): Promise<void> => {
   try {
-    const forumId = parseInt(req.params.id);
+    const forumId = parseInt(req.params.id as string);
     const { title, description, category_id } = req.body;
 
     if (isNaN(forumId)) {
@@ -238,7 +238,7 @@ export const updateForum = async (req: Request, res: Response): Promise<void> =>
  */
 export const deleteForum = async (req: Request, res: Response): Promise<void> => {
   try {
-    const forumId = parseInt(req.params.id);
+    const forumId = parseInt(req.params.id as string);
 
     if (isNaN(forumId)) {
       res.status(400).json({ error: 'Invalid forum ID' });

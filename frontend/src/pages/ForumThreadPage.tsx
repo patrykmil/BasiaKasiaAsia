@@ -60,14 +60,19 @@ function ForumThreadPage() {
 
   const handleCreateThread = async () => {
     try {
-      if (!threadTitle.trim()) {
+      const trimmedTitle = threadTitle.trim();
+      if (!trimmedTitle) {
         toast.warning("Please enter a thread title");
+        return;
+      }
+      if (trimmedTitle.length < 3) {
+        toast.warning("Title must be at least 3 characters");
         return;
       }
 
       // Create new thread object
 
-      await createThread(Number(id), threadTitle, threadDescription);
+      await createThread(Number(id), trimmedTitle, threadDescription.trim());
 
       await handleGetThreads();
       // Clear form and close dialog
@@ -77,8 +82,12 @@ function ForumThreadPage() {
 
       // Show success message
       toast.success("Thread created successfully!");
-    } catch (error) {
-      toast.error(`Error creating thread: ${error}`);
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.error ||
+        error?.message ||
+        "Unknown error";
+      toast.error(`Error creating thread: ${message}`);
     }
   };
 

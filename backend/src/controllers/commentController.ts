@@ -10,7 +10,7 @@ export const getCommentsByThreadId = async (
   res: Response
 ): Promise<void> => {
   try {
-    const threadId = parseInt(req.params.threadId);
+    const threadId = parseInt(req.params.threadId as string);
     const limit = parseInt(req.query.limit as string) || 20;
     const offset = parseInt(req.query.offset as string) || 0;
     const includeReplies = req.query.include_replies !== 'false'; // Default true
@@ -67,7 +67,7 @@ export const getCommentsByThreadId = async (
  */
 export const getCommentById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const commentId = parseInt(req.params.id);
+    const commentId = parseInt(req.params.id as string);
     const includeReplies = req.query.include_replies === 'true';
 
     if (isNaN(commentId)) {
@@ -97,7 +97,7 @@ export const getRepliesForComment = async (
   res: Response
 ): Promise<void> => {
   try {
-    const commentId = parseInt(req.params.commentId);
+    const commentId = parseInt(req.params.commentId as string);
     const maxDepth = parseInt(req.query.max_depth as string) || 3;
 
     if (isNaN(commentId)) {
@@ -132,7 +132,7 @@ export const getCommentsByUserId = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userId = parseInt(req.params.userId);
+    const userId = parseInt(req.params.userId as string);
     const limit = parseInt(req.query.limit as string) || 20;
     const offset = parseInt(req.query.offset as string) || 0;
 
@@ -228,7 +228,7 @@ export const createComment = async (req: Request, res: Response): Promise<void> 
  */
 export const updateComment = async (req: Request, res: Response): Promise<void> => {
   try {
-    const commentId = parseInt(req.params.id);
+    const commentId = parseInt(req.params.id as string);
     const { content } = req.body;
 
     if (isNaN(commentId)) {
@@ -287,7 +287,7 @@ export const updateComment = async (req: Request, res: Response): Promise<void> 
  */
 export const deleteComment = async (req: Request, res: Response): Promise<void> => {
   try {
-    const commentId = parseInt(req.params.id);
+    const commentId = parseInt(req.params.id as string);
 
     if (isNaN(commentId)) {
       res.status(400).json({ error: 'Invalid comment ID' });
@@ -332,7 +332,7 @@ export const deleteComment = async (req: Request, res: Response): Promise<void> 
  */
 export const getCommentStats = async (req: Request, res: Response): Promise<void> => {
   try {
-    const threadId = parseInt(req.params.threadId);
+    const threadId = parseInt(req.params.threadId as string);
 
     if (isNaN(threadId)) {
       res.status(400).json({ error: 'Invalid thread ID' });
