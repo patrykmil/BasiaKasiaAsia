@@ -17,100 +17,118 @@ export interface AuthResult {
   error?: string;
 }
 
-/**
- * Generate a JWT token for a user
- * @param payload User data to include in the token
- * @returns JWT token string
- */
-export const generateToken = (payload: JWTPayload): string => {
-  try {
-    const token = jwt.sign(payload, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN,
-      issuer: 'bka-forum',
-      audience: 'bka-users',
-    } as jwt.SignOptions);
-    return token;
-  } catch (error) {
-    throw new Error(
-      `Failed to generate token: ${error instanceof Error ? error.message : 'Unknown error'}`
-    );
+export class AuthService {
+  private readonly jwtSecret: string;
+  private readonly jwtExpiresIn: string;
+
+  constructor() {
+    this.jwtSecret = JWT_SECRET;
+    this.jwtExpiresIn = JWT_EXPIRES_IN;
   }
-};
 
-/**
- * Verify and decode a JWT token
- * @param token JWT token string
- * @returns AuthResult with success status and decoded payload or error
- */
-export const verifyToken = (token: string): AuthResult => {
-  try {
-    // Remove 'Bearer ' prefix if present
-    const cleanToken = token.startsWith('Bearer ') ? token.slice(7) : token;
+  /**
+   * Generate a JWT token for a user
+   * @param payload User data to include in the token
+   * @returns JWT token string
+   */
+  public generateToken(payload: JWTPayload): string {
+    try {
+      const token = jwt.sign(payload, this.jwtSecret, {
+        expiresIn: this.jwtExpiresIn,
+        issuer: 'bka-forum',
+        audience: 'bka-users',
+      } as jwt.SignOptions);
+      return token;
+    } catch (error) {
+      throw new Error(
+        `Failed to generate token: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+  }
 
-    const decoded = jwt.verify(cleanToken, JWT_SECRET, {
-      issuer: 'bka-forum',
-      audience: 'bka-users',
-    }) as JWTPayload;
+  /**
+   * Verify and decode a JWT token
+   * @param token JWT token string
+   * @returns AuthResult with success status and decoded payload or error
+   */
+  public verifyToken(token: string): AuthResult {
+    try {
+      // Remove 'Bearer ' prefix if present
+      const cleanToken = token.startsWith('Bearer ') ? token.slice(7) : token;
 
-    return {
-      success: true,
-      payload: decoded,
-    };
-  } catch (error) {
-    let errorMessage = 'Invalid token';
+      const decoded = jwt.verify(cleanToken, this.jwtSecret, {
+        issuer: 'bka-forum',
+        audience: 'bka-users',
+      }) as JWTPayload;
 
-    if (error instanceof jwt.TokenExpiredError) {
-      errorMessage = 'Token has expired';
-    } else if (error instanceof jwt.JsonWebTokenError) {
-      errorMessage = 'Malformed token';
-    } else if (error instanceof jwt.NotBeforeError) {
-      errorMessage = 'Token not active yet';
+      return {
+        success: true,
+        payload: decoded,
+      };
+    } catch (error) {
+      let errorMessage = 'Invalid token';
+
+      if (error instanceof jwt.TokenExpiredError) {
+        errorMessage = 'Token has expired';
+      } else if (error instanceof jwt.JsonWebTokenError) {
+        errorMessage = 'Malformed token';
+      } else if (error instanceof jwt.NotBeforeError) {
+        errorMessage = 'Token not active yet';
+      }
+
+      return {
+        success: false,
+        error: errorMessage,
+      };
+    }
+  }
+
+  /**
+   * Extract token from Authorization header
+   * @param authHeader Authorization header value (e.g., "Bearer eyJ...")
+   * @returns Token string or null if not found
+   */
+  public extractTokenFromHeader(authHeader?: string): string | null {
+    if (!authHeader) return null;
+
+    const parts = authHeader.split(' ');
+    if (parts.length !== 2 || parts[0] !== 'Bearer') {
+      return null;
     }
 
-    return {
-      success: false,
-      error: errorMessage,
-    };
-  }
-};
-
-/**
- * Extract token from Authorization header
- * @param authHeader Authorization header value (e.g., "Bearer eyJ...")
- * @returns Token string or null if not found
- */
-export const extractTokenFromHeader = (authHeader?: string): string | null => {
-  if (!authHeader) return null;
-
-  const parts = authHeader.split(' ');
-  if (parts.length !== 2 || parts[0] !== 'Bearer') {
-    return null;
+    return parts[1];
   }
 
-  return parts[1];
-};
+  /**
+   * Express middleware-compatible function to verify JWT token
+   * @param authHeader Authorization header value
+   * @returns AuthResult
+   */
+  public authenticateToken(authHeader?: string): AuthResult {
+    const token = this.extractTokenFromHeader(authHeader);
 
-/**
- * Express middleware-compatible function to verify JWT token
- * @param authHeader Authorization header value
- * @returns AuthResult
- */
-export const authenticateToken = (authHeader?: string): AuthResult => {
-  const token = extractTokenFromHeader(authHeader);
+    if (!token) {
+      return {
+        success: false,
+        error: 'No token provided',
+      };
+    }
 
-  if (!token) {
-    return {
-      success: false,
-      error: 'No token provided',
-    };
+    return this.verifyToken(token);
   }
+}
 
-  return verifyToken(token);
-};
+// Singleton instance for backward compatibility
+const authServiceInstance = new AuthService();
 
-export default {
-  generateToken,
-  verifyToken,
-  extractTokenFromHeader,
-  authenticateToken,
-};
+// Named exports that delegate to the singleton (for backward compatibility with middleware)
+export const generateToken = (payload: JWTPayload): string =>
+  authServiceInstance.generateToken(payload);
+export const verifyToken = (token: string): AuthResult =>
+  authServiceInstance.verifyToken(token);
+export const extractTokenFromHeader = (authHeader?: string): string | null =>
+  authServiceInstance.extractTokenFromHeader(authHeader);
+export const authenticateToken = (authHeader?: string): AuthResult =>
+  authServiceInstance.authenticateToken(authHeader);
+
+export default authServiceInstance;

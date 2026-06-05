@@ -1,17 +1,38 @@
 import morgan from 'morgan';
 import logger from '../config/logger';
 
-// Create a stream object for morgan that uses winston
-const stream = {
-  write: (message: string) => {
-    // Remove trailing newline that morgan adds
-    logger.http(message.trim());
-  },
-};
+export class LoggerMiddleware {
+  private morganFormat: string;
 
-// Define the format for morgan
-const morganFormat =
-  ':remote-addr :method :url :status :res[content-length] - :response-time ms';
+  constructor() {
+    this.morganFormat =
+      ':remote-addr :method :url :status :res[content-length] - :response-time ms';
+  }
 
-// Create the morgan middleware
-export const morganMiddleware = morgan(morganFormat, { stream });
+  /**
+   * Create a stream object for morgan that uses winston
+   */
+  private createStream() {
+    return {
+      write: (message: string) => {
+        // Remove trailing newline that morgan adds
+        logger.http(message.trim());
+      },
+    };
+  }
+
+  /**
+   * Get the morgan middleware handler
+   */
+  public getMiddleware() {
+    return morgan(this.morganFormat, { stream: this.createStream() });
+  }
+}
+
+// Singleton instance
+const loggerMiddleware = new LoggerMiddleware();
+
+// Backward-compatible export
+export const morganMiddleware = loggerMiddleware.getMiddleware();
+
+export default loggerMiddleware;

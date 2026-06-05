@@ -1,8 +1,13 @@
 import { Router } from 'express';
-import * as forumController from '../controllers/forumController';
+import { ForumController } from '../controllers/forumController';
+import { ForumService } from '../services/forum';
 import { authenticateJWT, requireAdmin } from '../middleware/auth';
 
 const router = Router();
+
+// Instantiate service and controller
+const forumService = new ForumService();
+const forumController = new ForumController(forumService);
 
 // Public routes (no authentication required)
 router.get('/forums', forumController.getAllForums);

@@ -1,8 +1,13 @@
 import { Router } from 'express';
-import * as threadController from '../controllers/threadController';
+import { ThreadController } from '../controllers/threadController';
+import { ThreadService } from '../services/thread';
 import { authenticateJWT } from '../middleware/auth';
 
 const router = Router();
+
+// Instantiate service and controller
+const threadService = new ThreadService();
+const threadController = new ThreadController(threadService);
 
 // Public routes (no authentication required)
 router.get('/threads', threadController.getAllThreads);

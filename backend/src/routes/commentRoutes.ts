@@ -1,8 +1,13 @@
 import { Router } from 'express';
-import * as commentController from '../controllers/commentController';
+import { CommentController } from '../controllers/commentController';
+import { CommentService } from '../services/comment';
 import { authenticateJWT } from '../middleware/auth';
 
 const router = Router();
+
+// Instantiate service and controller
+const commentService = new CommentService();
+const commentController = new CommentController(commentService);
 
 // Public routes (no authentication required)
 router.get('/threads/:threadId/comments/stats', commentController.getCommentStats);

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { authenticateToken, AuthResult } from '../services/auth';
+import { AuthService, AuthResult } from '../services/auth';
 
 // Extend Express Request type to include user
 declare global {
@@ -15,75 +15,93 @@ declare global {
   }
 }
 
-/**
- * Middleware to authenticate JWT tokens
- */
-export const authenticateJWT = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const authHeader = req.headers.authorization;
+export class AuthMiddleware {
+  private authService: AuthService;
 
-  const authResult: AuthResult = authenticateToken(authHeader);
-
-  if (!authResult.success) {
-    res.status(401).json({
-      error: 'Unauthorized',
-      message: authResult.error,
-    });
-    return;
+  constructor(authService?: AuthService) {
+    this.authService = authService || new AuthService();
   }
 
-  // Add user info to request object
-  req.user = authResult.payload;
-  next();
-};
+  /**
+   * Middleware to authenticate JWT tokens
+   */
+  public authenticateJWT = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): void => {
+    const authHeader = req.headers.authorization;
 
-export const optionalAuthentication = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  const authHeader = req.headers.authorization;
+    const authResult: AuthResult = this.authService.authenticateToken(authHeader);
 
-  if (authHeader) {
-    const authResult: AuthResult = authenticateToken(authHeader);
-    if (authResult.success) {
-      req.user = authResult.payload;
-    }
-  }
-
-  next();
-};
-
-/**
- * Middleware to check if user has specific role
- */
-export const requireRole = (requiredRoleId: number) => {
-  return (req: Request, res: Response, next: NextFunction): void => {
-    if (!req.user) {
-      res.status(401).json({ error: 'Authentication required' });
+    if (!authResult.success) {
+      res.status(401).json({
+        error: 'Unauthorized',
+        message: authResult.error,
+      });
       return;
     }
 
-    if (req.user.roleId !== requiredRoleId) {
-      res.status(403).json({ error: 'Insufficient permissions' });
-      return;
+    // Add user info to request object
+    req.user = authResult.payload;
+    next();
+  };
+
+  /**
+   * Middleware for optional authentication (doesn't fail if no token)
+   */
+  public optionalAuthentication = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): void => {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader) {
+      const authResult: AuthResult = this.authService.authenticateToken(authHeader);
+      if (authResult.success) {
+        req.user = authResult.payload;
+      }
     }
 
     next();
   };
-};
 
-/**
- * Middleware to check if user is admin (role_id 3)
- */
-export const requireAdmin = requireRole(3);
+  /**
+   * Middleware to check if user has specific role
+   */
+  public requireRole(requiredRoleId: number) {
+    return (req: Request, res: Response, next: NextFunction): void => {
+      if (!req.user) {
+        res.status(401).json({ error: 'Authentication required' });
+        return;
+      }
 
-export default {
-  authenticateJWT,
-  optionalAuthentication,
-  requireRole,
-  requireAdmin,
-};
+      if (req.user.roleId !== requiredRoleId) {
+        res.status(403).json({ error: 'Insufficient permissions' });
+        return;
+      }
+
+      next();
+    };
+  }
+
+  /**
+   * Middleware to check if user is admin (role_id 3)
+   */
+  public get requireAdmin() {
+    return this.requireRole(3);
+  }
+}
+
+// Singleton instance
+const authMiddleware = new AuthMiddleware();
+
+// Backward-compatible named exports
+export const authenticateJWT = authMiddleware.authenticateJWT;
+export const optionalAuthentication = authMiddleware.optionalAuthentication;
+export const requireRole = (requiredRoleId: number) =>
+  authMiddleware.requireRole(requiredRoleId);
+export const requireAdmin = authMiddleware.requireAdmin;
+
+export default authMiddleware;

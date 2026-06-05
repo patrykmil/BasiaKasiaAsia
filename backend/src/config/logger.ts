@@ -2,61 +2,89 @@ import winston from 'winston';
 import path from 'path';
 import fs from 'fs';
 
-const logDir = process.env.LOG_DIR || path.join(process.cwd(), 'logs');
-fs.mkdirSync(logDir, { recursive: true });
+export class Logger {
+  private logger: winston.Logger;
 
-// Define log levels
-const levels = {
-  error: 0,
-  warn: 1,
-  info: 2,
-  http: 3,
-  debug: 4,
-};
+  constructor() {
+    const logDir = process.env.LOG_DIR || path.join(process.cwd(), 'logs');
+    fs.mkdirSync(logDir, { recursive: true });
 
-// Define colors for each level
-const colors = {
-  error: 'red',
-  warn: 'yellow',
-  info: 'green',
-  http: 'magenta',
-  debug: 'blue',
-};
+    // Define log levels
+    const levels = {
+      error: 0,
+      warn: 1,
+      info: 2,
+      http: 3,
+      debug: 4,
+    };
 
-// Add colors to winston
-winston.addColors(colors);
+    // Define colors for each level
+    const colors = {
+      error: 'red',
+      warn: 'yellow',
+      info: 'green',
+      http: 'magenta',
+      debug: 'blue',
+    };
 
-// Define format
-const format = winston.format.combine(
-  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  winston.format.colorize({ all: true }),
-  winston.format.printf((info) => `${info.timestamp} [${info.level}]: ${info.message}`)
-);
+    // Add colors to winston
+    winston.addColors(colors);
 
-// Define which transports the logger must use
-const transports = [
-  // Console transport
-  new winston.transports.Console(),
+    // Define format
+    const format = winston.format.combine(
+      winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+      winston.format.colorize({ all: true }),
+      winston.format.printf((info) => `${info.timestamp} [${info.level}]: ${info.message}`)
+    );
 
-  // Error log file
-  new winston.transports.File({
-    filename: path.join(logDir, 'error.log'),
-    level: 'error',
-  }),
+    // Define which transports the logger must use
+    const transports = [
+      // Console transport
+      new winston.transports.Console(),
 
-  // Combined log file
-  new winston.transports.File({
-    filename: path.join(logDir, 'combined.log'),
-  }),
-];
+      // Error log file
+      new winston.transports.File({
+        filename: path.join(logDir, 'error.log'),
+        level: 'error',
+      }),
 
-// Create the logger
-const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || 'debug',
-  levels,
-  format,
-  transports,
-  exitOnError: false,
-});
+      // Combined log file
+      new winston.transports.File({
+        filename: path.join(logDir, 'combined.log'),
+      }),
+    ];
 
+    // Create the logger
+    this.logger = winston.createLogger({
+      level: process.env.LOG_LEVEL || 'debug',
+      levels,
+      format,
+      transports,
+      exitOnError: false,
+    });
+  }
+
+  public error(message: string, ...meta: any[]): void {
+    this.logger.error(message, ...meta);
+  }
+
+  public warn(message: string, ...meta: any[]): void {
+    this.logger.warn(message, ...meta);
+  }
+
+  public info(message: string, ...meta: any[]): void {
+    this.logger.info(message, ...meta);
+  }
+
+  public http(message: string, ...meta: any[]): void {
+    this.logger.http(message, ...meta);
+  }
+
+  public debug(message: string, ...meta: any[]): void {
+    this.logger.debug(message, ...meta);
+  }
+}
+
+// Singleton instance - exported as default for backward compatibility
+const logger = new Logger();
 export default logger;

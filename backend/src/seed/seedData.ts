@@ -6,16 +6,50 @@ import { Comment } from '../models/Comment';
 import { Role } from '../models/Role';
 import logger from '../config/logger';
 
-export const seedDatabase = async (): Promise<void> => {
-  try {
-    logger.info('Starting database seeding...');
+export class DatabaseSeeder {
+  /**
+   * Seed the database with initial data
+   */
+  public async seed(): Promise<void> {
+    try {
+      logger.info('Starting database seeding...');
 
-    // Create roles first
+      // Create roles first
+      const userRole = await this.createRoles();
+
+      // Create users
+      const createdUsers = await this.createUsers(userRole.role_id);
+
+      // Map usernames to user IDs
+      const userMap = this.buildUserMap(createdUsers);
+
+      // Create forums
+      const forums = await this.createForums(userMap);
+
+      // Create threads and comments
+      await this.createThreadsAndComments(forums, userMap);
+
+      logger.info('Database seeding completed successfully!');
+    } catch (error) {
+      logger.error('Error seeding database:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Create default roles
+   */
+  private async createRoles(): Promise<Role> {
     const userRole = await Role.create({ name: 'user' });
     await Role.create({ name: 'moderator' });
     await Role.create({ name: 'admin' });
+    return userRole;
+  }
 
-    // Create users
+  /**
+   * Create seed users
+   */
+  private async createUsers(roleId: number): Promise<User[]> {
     const users = [
       {
         firstName: 'Jan',
@@ -107,20 +141,34 @@ export const seedDatabase = async (): Promise<void> => {
         email: userData.email,
         password_hash: hashedPassword,
         date_of_birth: new Date(new Date().getFullYear() - userData.age, 0, 1),
-        role_id: userRole.role_id,
+        role_id: roleId,
       });
       createdUsers.push(user);
     }
 
     logger.info(`Created ${createdUsers.length} users`);
+    return createdUsers;
+  }
 
-    // Map usernames to user IDs
+  /**
+   * Build a map of usernames to user IDs
+   */
+  private buildUserMap(users: User[]): { [key: string]: number } {
     const userMap: { [key: string]: number } = {};
-    createdUsers.forEach((user) => {
+    users.forEach((user) => {
       userMap[user.username] = user.user_id;
     });
+    return userMap;
+  }
 
-    // Create forums
+  /**
+   * Create seed forums
+   */
+  private async createForums(userMap: { [key: string]: number }): Promise<{
+    japaneseCuisine: Forum;
+    handcraft: Forum;
+    plants: Forum;
+  }> {
     const japaneseCuisine = await Forum.create({
       title: 'Japanese Cuisine',
       description: 'Discussion about Japanese food, recipes, and restaurants',
@@ -140,13 +188,22 @@ export const seedDatabase = async (): Promise<void> => {
     });
 
     logger.info('Created 3 forums');
+    return { japaneseCuisine, handcraft, plants };
+  }
 
+  /**
+   * Create seed threads and comments
+   */
+  private async createThreadsAndComments(
+    forums: { japaneseCuisine: Forum; handcraft: Forum; plants: Forum },
+    userMap: { [key: string]: number }
+  ): Promise<void> {
     // Create threads and comments for Japanese Cuisine
     const thread1 = await Thread.create({
       title: 'The secret to perfect Tonkotsu Ramen broth',
       description:
         "Hi everyone! I've been trying to get that characteristic creamy and sticky Tonkotsu broth for three attempts now, but it keeps coming out too watery. I boil pork bones for about 8 hours on high heat. Should I boil them longer, or maybe add pork trotters for collagen?",
-      forum_id: japaneseCuisine.forum_id,
+      forum_id: forums.japaneseCuisine.forum_id,
       user_id: userMap['janek_k'],
     });
 
@@ -168,7 +225,7 @@ export const seedDatabase = async (): Promise<void> => {
       title: 'Where to buy fresh wasabi in Poland?',
       description:
         "Do any of you know where I can get real wasabi root? I'm tired of those green-dyed horseradish pastes. I'd like to grate fresh wasabi for sushi for a special occasion.",
-      forum_id: japaneseCuisine.forum_id,
+      forum_id: forums.japaneseCuisine.forum_id,
       user_id: userMap['tommylew'],
     });
 
@@ -184,7 +241,7 @@ export const seedDatabase = async (): Promise<void> => {
       title: 'Renovating an old dresser - which sandpaper?',
       description:
         "I found a great 60s dresser by the trash. I want to remove the old high-gloss varnish and leave the raw wood (I think it's walnut). What grit sandpaper should I start with so I don't ruin the veneer? I'm afraid of sanding right through it.",
-      forum_id: handcraft.forum_id,
+      forum_id: forums.handcraft.forum_id,
       user_id: userMap['mkaminski'],
     });
 
@@ -206,7 +263,7 @@ export const seedDatabase = async (): Promise<void> => {
       title: 'Macrame for beginners - which cord?',
       description:
         "I want to make my first plant hanger. Which cord should I choose to start? Braided cotton or twisted? And what thickness is best so my fingers don't hurt and the knots are visible?",
-      forum_id: handcraft.forum_id,
+      forum_id: forums.handcraft.forum_id,
       user_id: userMap['aga_z'],
     });
 
@@ -222,7 +279,7 @@ export const seedDatabase = async (): Promise<void> => {
       title: 'Monstera Variegata - brown spots on white parts',
       description:
         'Help! I bought my dream Monstera Variegata cutting. After a week, the white parts of the leaves started turning brown and drying out. The plant is one meter from a south-facing window, and I water it when the top layer is dry. What am I doing wrong?',
-      forum_id: plants.forum_id,
+      forum_id: forums.plants.forum_id,
       user_id: userMap['anowak99'],
     });
 
@@ -255,9 +312,8 @@ export const seedDatabase = async (): Promise<void> => {
     });
 
     logger.info('Created 5 threads with comments');
-    logger.info('Database seeding completed successfully!');
-  } catch (error) {
-    logger.error('Error seeding database:', error);
-    throw error;
   }
-};
+}
+
+// Backward-compatible export
+export const seedDatabase = () => new DatabaseSeeder().seed();

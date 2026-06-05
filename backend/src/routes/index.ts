@@ -5,24 +5,39 @@ import forumRoutes from './forumRoutes';
 import commentRoutes from './commentRoutes';
 import authRoutes from './authRoutes';
 
-const router = Router();
+export class AppRouter {
+  private router: Router;
 
-// API routes
-router.use('/api/v1', userRoutes);
-router.use('/api/v1', threadRoutes);
-router.use('/api/v1', forumRoutes);
-router.use('/api/v1', commentRoutes);
-// Auth routes (mounted to match frontend expectations: /api/auth)
-router.use('/api/auth', authRoutes);
+  constructor() {
+    this.router = Router();
+    this.configureRoutes();
+  }
 
-// Health check
-router.get('/health', (req, res) => {
-  res.json({
-    status: 'OK',
-    timestamp: new Date().toISOString(),
-    message: 'BKA Forum API is running',
-    version: 'v1',
-  });
-});
+  private configureRoutes(): void {
+    // API routes
+    this.router.use('/api/v1', userRoutes);
+    this.router.use('/api/v1', threadRoutes);
+    this.router.use('/api/v1', forumRoutes);
+    this.router.use('/api/v1', commentRoutes);
+    // Auth routes (mounted to match frontend expectations: /api/auth)
+    this.router.use('/api/auth', authRoutes);
 
-export default router;
+    // Health check
+    this.router.get('/health', (req, res) => {
+      res.json({
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+        message: 'BKA Forum API is running',
+        version: 'v1',
+      });
+    });
+  }
+
+  public getRouter(): Router {
+    return this.router;
+  }
+}
+
+// Backward-compatible default export
+const appRouter = new AppRouter();
+export default appRouter.getRouter();
