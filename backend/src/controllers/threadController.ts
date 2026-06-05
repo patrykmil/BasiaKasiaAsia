@@ -90,10 +90,7 @@ export class ThreadController {
   /**
    * Get threads by forum ID
    */
-  public getThreadsByForumId = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
+  public getThreadsByForumId = async (req: Request, res: Response): Promise<void> => {
     try {
       const forumId = parseInt(req.params.forumId as string);
       const limit = parseInt(req.query.limit as string) || 20;
@@ -109,7 +106,11 @@ export class ThreadController {
         return;
       }
 
-      const threads = await this.threadService.getThreadsByForumId(forumId, limit, offset);
+      const threads = await this.threadService.getThreadsByForumId(
+        forumId,
+        limit,
+        offset
+      );
 
       // Transform threads to the desired format
       const formattedThreads = threads.map((thread) => ({
@@ -132,10 +133,7 @@ export class ThreadController {
   /**
    * Get threads by user ID
    */
-  public getThreadsByUserId = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
+  public getThreadsByUserId = async (req: Request, res: Response): Promise<void> => {
     try {
       const userId = parseInt(req.params.userId as string);
       const limit = parseInt(req.query.limit as string) || 20;
@@ -151,7 +149,11 @@ export class ThreadController {
         return;
       }
 
-      const threads = await this.threadService.getThreadsByUserId(userId, limit, offset);
+      const threads = await this.threadService.getThreadsByUserId(
+        userId,
+        limit,
+        offset
+      );
 
       res.json({
         threads,

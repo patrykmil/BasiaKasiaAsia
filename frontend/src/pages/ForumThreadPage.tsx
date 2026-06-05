@@ -84,9 +84,7 @@ function ForumThreadPage() {
       toast.success("Thread created successfully!");
     } catch (error: any) {
       const message =
-        error?.response?.data?.error ||
-        error?.message ||
-        "Unknown error";
+        error?.response?.data?.error || error?.message || "Unknown error";
       toast.error(`Error creating thread: ${message}`);
     }
   };

@@ -92,7 +92,9 @@ class App {
       // Start server
       this.app.listen(this.port, () => {
         logger.info(`Server running at http://localhost:${this.port}`);
-        logger.info(`API documentation available at http://localhost:${this.port}/health`);
+        logger.info(
+          `API documentation available at http://localhost:${this.port}/health`
+        );
         logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
         logger.info(`Logs directory: ${process.cwd()}/logs`);
       });

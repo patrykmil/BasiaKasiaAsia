@@ -79,10 +79,7 @@ export class ForumController {
   /**
    * Get forums by category ID
    */
-  public getForumsByCategoryId = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
+  public getForumsByCategoryId = async (req: Request, res: Response): Promise<void> => {
     try {
       const categoryId = parseInt(req.params.categoryId as string);
       const limit = parseInt(req.query.limit as string) || 50;
@@ -98,7 +95,11 @@ export class ForumController {
         return;
       }
 
-      const forums = await this.forumService.getForumsByCategoryId(categoryId, limit, offset);
+      const forums = await this.forumService.getForumsByCategoryId(
+        categoryId,
+        limit,
+        offset
+      );
 
       res.json({
         forums,

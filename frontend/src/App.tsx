@@ -25,6 +25,20 @@ const ProtectedRoute = () => {
   return <Outlet />;
 };
 
+const AdminRoute = () => {
+  const auth = useAuth();
+
+  if (!auth.isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  if (auth.role !== "admin") {
+    return <Navigate to="/forum" />;
+  }
+
+  return <Outlet />;
+};
+
 function App() {
   return (
     <BrowserRouter>
@@ -43,7 +57,9 @@ function App() {
           <Route path="/profile" element={<ProtectedRoute />}>
             <Route path="" element={<ProfilePage />} />
           </Route>
-          <Route path="/admin" element={<AdminPanelPage />} />
+          <Route path="/admin" element={<AdminRoute />}>
+            <Route path="" element={<AdminPanelPage />} />
+          </Route>
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </AuthProvider>

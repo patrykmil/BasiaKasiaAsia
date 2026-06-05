@@ -25,11 +25,7 @@ export class AuthMiddleware {
   /**
    * Middleware to authenticate JWT tokens
    */
-  public authenticateJWT = (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): void => {
+  public authenticateJWT = (req: Request, res: Response, next: NextFunction): void => {
     const authHeader = req.headers.authorization;
 
     const authResult: AuthResult = this.authService.authenticateToken(authHeader);

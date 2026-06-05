@@ -19,7 +19,8 @@ export class Database {
         ? path.resolve(process.cwd(), process.env.DB_PATH)
         : path.resolve(__dirname, '../../db/database.db'),
       models: [Role, User, Forum, Thread, Comment],
-      logging: process.env.NODE_ENV === 'development' ? (msg) => logger.debug(msg) : false,
+      logging:
+        process.env.NODE_ENV === 'development' ? (msg) => logger.debug(msg) : false,
       pool: {
         max: 5,
         min: 0,

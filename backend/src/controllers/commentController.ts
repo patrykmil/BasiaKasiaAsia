@@ -12,10 +12,7 @@ export class CommentController {
   /**
    * Get comments for a thread
    */
-  public getCommentsByThreadId = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
+  public getCommentsByThreadId = async (req: Request, res: Response): Promise<void> => {
     try {
       const threadId = parseInt(req.params.threadId as string);
       const limit = parseInt(req.query.limit as string) || 20;
@@ -82,7 +79,10 @@ export class CommentController {
         return;
       }
 
-      const comment = await this.commentService.getCommentById(commentId, includeReplies);
+      const comment = await this.commentService.getCommentById(
+        commentId,
+        includeReplies
+      );
 
       if (!comment) {
         res.status(404).json({ error: 'Comment not found' });
@@ -99,10 +99,7 @@ export class CommentController {
   /**
    * Get replies for a specific comment
    */
-  public getRepliesForComment = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
+  public getRepliesForComment = async (req: Request, res: Response): Promise<void> => {
     try {
       const commentId = parseInt(req.params.commentId as string);
       const maxDepth = parseInt(req.query.max_depth as string) || 3;
@@ -117,7 +114,10 @@ export class CommentController {
         return;
       }
 
-      const replies = await this.commentService.getRepliesForComment(commentId, maxDepth);
+      const replies = await this.commentService.getRepliesForComment(
+        commentId,
+        maxDepth
+      );
 
       res.json({
         replies,
@@ -134,10 +134,7 @@ export class CommentController {
   /**
    * Get comments by user ID
    */
-  public getCommentsByUserId = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
+  public getCommentsByUserId = async (req: Request, res: Response): Promise<void> => {
     try {
       const userId = parseInt(req.params.userId as string);
       const limit = parseInt(req.query.limit as string) || 20;
@@ -153,7 +150,11 @@ export class CommentController {
         return;
       }
 
-      const comments = await this.commentService.getCommentsByUserId(userId, limit, offset);
+      const comments = await this.commentService.getCommentsByUserId(
+        userId,
+        limit,
+        offset
+      );
 
       res.json({
         comments,
@@ -186,7 +187,9 @@ export class CommentController {
 
       // Validate content length
       if (content.length < 1 || content.length > 10000) {
-        res.status(400).json({ error: 'Content must be between 1 and 10000 characters' });
+        res
+          .status(400)
+          .json({ error: 'Content must be between 1 and 10000 characters' });
         return;
       }
 
@@ -250,7 +253,9 @@ export class CommentController {
       }
 
       if (content.length < 1 || content.length > 10000) {
-        res.status(400).json({ error: 'Content must be between 1 and 10000 characters' });
+        res
+          .status(400)
+          .json({ error: 'Content must be between 1 and 10000 characters' });
         return;
       }
 

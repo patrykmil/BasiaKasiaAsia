@@ -165,7 +165,10 @@ export class UserController {
     } catch (error) {
       logger.error('Error creating user:', error);
 
-      if (error instanceof Error && error.message.includes('UNIQUE constraint failed')) {
+      if (
+        error instanceof Error &&
+        error.message.includes('UNIQUE constraint failed')
+      ) {
         res
           .status(409)
           .json({ error: 'User with this email or nickname already exists' });
